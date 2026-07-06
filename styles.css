@@ -141,7 +141,7 @@ input, textarea, select {
 }
 textarea { resize: vertical; }
 .hp-field { position: absolute; left: -9999px; opacity: 0; }
-.form-status { min-height: 24px; margin: 0; font-weight: 700; color: var(--sage-dark); }
+.form-status { min-height: 24px; margin: 0; font-weight: 700; color: var(--sage-dark); white-space: pre-wrap; overflow-wrap: anywhere; }
 .form-status.error { color: #9b362b; }
 .registry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .registry-card { overflow: hidden; display: flex; flex-direction: column; min-height: 100%; }

@@ -1,4 +1,4 @@
-﻿const { airtableFetch, json, normalize, readInviteCode, validateInviteCode } = require('./_airtable');
+const { airtableFetch, inspectAirtableConfig, json, normalize, readInviteCode, validateInviteCode } = require('./_airtable');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') return json(405, { error: 'Method not allowed.' });
@@ -20,6 +20,12 @@ exports.handler = async (event) => {
 
     return json(200, { items });
   } catch (error) {
-    return json(500, { error: error.message || 'Unable to load registry.' });
+    const diagnostics = await inspectAirtableConfig().catch((diagnosticError) => ({
+      error: diagnosticError.message || 'Unable to inspect Airtable configuration.'
+    }));
+    return json(500, {
+      error: error.message || 'Unable to load registry.',
+      diagnostics
+    });
   }
 };

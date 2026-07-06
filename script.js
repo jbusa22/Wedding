@@ -47,6 +47,11 @@ function status(node, message, isError = false) {
   node.classList.toggle('error', isError);
 }
 
+function formatDiagnostics(diagnostics) {
+  if (!diagnostics) return '';
+  return `\n\nAirtable diagnostics:\n${JSON.stringify(diagnostics, null, 2)}`;
+}
+
 async function apiFetch(path, options = {}) {
   const headers = new Headers(options.headers || {});
   headers.set('Content-Type', 'application/json');
@@ -94,12 +99,16 @@ async function loadRegistry() {
   try {
     const response = await apiFetch('/.netlify/functions/registry');
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Unable to load registry.');
+    if (!response.ok) {
+      const error = new Error(data.error || 'Unable to load registry.');
+      error.diagnostics = data.diagnostics;
+      throw error;
+    }
     renderRegistry(data.items || []);
     status(registryStatus, '');
   } catch (error) {
     renderRegistry([]);
-    status(registryStatus, `${error.message} Showing sample gifts for now.`, true);
+    status(registryStatus, `${error.message} Showing sample gifts for now.${formatDiagnostics(error.diagnostics)}`, true);
   }
 }
 
