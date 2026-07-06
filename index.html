@@ -1,0 +1,156 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wedding</title>
+  <meta name="description" content="Wedding details, RSVP, registry, travel, and schedule." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Wedding home">J &amp; A</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#schedule">Schedule</a>
+      <a href="#travel">Travel</a>
+      <a href="#rsvp">RSVP</a>
+      <a href="#registry">Registry</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="ghost-button" type="button" data-open-code>Guest Code</button>
+  </header>
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-media" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="kicker">Together with their families</p>
+        <h1>Jack &amp; Alex</h1>
+        <p class="hero-copy">Invite you to celebrate their wedding in Phoenix, Arizona.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#rsvp">RSVP</a>
+          <a class="secondary-button" href="#schedule">View Schedule</a>
+        </div>
+      </div>
+    </section>
+    <section id="schedule" class="section band-light">
+      <div class="section-inner two-column">
+        <div>
+          <p class="kicker">The Weekend</p>
+          <h2>Schedule</h2>
+        </div>
+        <div class="timeline">
+          <article>
+            <span>Friday</span>
+            <h3>Welcome Drinks</h3>
+            <p>7:00 PM at the hotel bar. Casual attire.</p>
+          </article>
+          <article>
+            <span>Saturday</span>
+            <h3>Ceremony &amp; Reception</h3>
+            <p>4:30 PM ceremony, followed by dinner and dancing.</p>
+          </article>
+          <article>
+            <span>Sunday</span>
+            <h3>Farewell Brunch</h3>
+            <p>10:00 AM for anyone still in town.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section id="travel" class="section">
+      <div class="section-inner grid-3">
+        <div>
+          <p class="kicker">Visit</p>
+          <h2>Travel</h2>
+          <p>Hotel block, airport, parking, and venue details will live here.</p>
+        </div>
+        <article class="info-card">
+          <h3>Venue</h3>
+          <p>Venue name<br>Street address<br>Phoenix, AZ</p>
+        </article>
+        <article class="info-card">
+          <h3>Hotel Block</h3>
+          <p>Hotel name and booking link placeholder.</p>
+        </article>
+      </div>
+    </section>
+    <section id="rsvp" class="section band-green protected-section" data-protected>
+      <div class="section-inner form-layout">
+        <div>
+          <p class="kicker">Please Reply</p>
+          <h2>RSVP</h2>
+          <p>Enter the invite code from your invitation once. We will remember it for this device and attach it to your RSVP.</p>
+        </div>
+        <form id="rsvp-form" class="panel-form" autocomplete="on">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
+          <input type="hidden" name="loadedAt" data-loaded-at />
+          <div class="field-pair">
+            <label>Primary name<input name="primaryName" required /></label>
+            <label>Email<input name="email" type="email" required /></label>
+          </div>
+          <div class="field-pair">
+            <label>Phone<input name="phone" type="tel" /></label>
+            <label>Attending<select name="attending" required><option value="">Choose</option><option>Yes</option><option>No</option></select></label>
+          </div>
+          <label>Street address<input name="street" required /></label>
+          <div class="field-triplet">
+            <label>City<input name="city" required /></label>
+            <label>State<input name="state" maxlength="2" required /></label>
+            <label>ZIP<input name="zip" inputmode="numeric" required /></label>
+          </div>
+          <label>Guest names<textarea name="guestNames" rows="3" placeholder="Everyone included in this RSVP"></textarea></label>
+          <div class="field-pair">
+            <label>Meal choices<textarea name="mealChoices" rows="3"></textarea></label>
+            <label>Dietary restrictions<textarea name="dietaryRestrictions" rows="3"></textarea></label>
+          </div>
+          <label>Song request<input name="songRequest" /></label>
+          <label>Notes<textarea name="notes" rows="3"></textarea></label>
+          <button class="primary-button full" type="submit">Send RSVP</button>
+          <p class="form-status" data-rsvp-status role="status"></p>
+        </form>
+      </div>
+    </section>
+    <section id="registry" class="section protected-section" data-protected>
+      <div class="section-inner">
+        <div class="section-heading-row">
+          <div>
+            <p class="kicker">Registry</p>
+            <h2>Gifts</h2>
+          </div>
+          <button class="secondary-button" type="button" data-refresh-registry>Refresh</button>
+        </div>
+        <div id="registry-grid" class="registry-grid" aria-live="polite"></div>
+        <p class="form-status" data-registry-status role="status"></p>
+      </div>
+    </section>
+    <section id="faq" class="section band-light">
+      <div class="section-inner faq-list">
+        <div>
+          <p class="kicker">Details</p>
+          <h2>FAQ</h2>
+        </div>
+        <details open><summary>What should I wear?</summary><p>Cocktail attire.</p></details>
+        <details><summary>Can I bring a guest?</summary><p>Please check your invitation or RSVP code details.</p></details>
+        <details><summary>Are kids invited?</summary><p>Please check the names listed with your invitation.</p></details>
+      </div>
+    </section>
+  </main>
+  <dialog id="code-dialog" class="code-dialog">
+    <form method="dialog" class="code-box" id="code-form">
+      <button class="dialog-close" value="cancel" aria-label="Close" type="submit">x</button>
+      <p class="kicker">Guest Access</p>
+      <h2>Enter your invite code</h2>
+      <p>Your code lets us show RSVP and registry details for invited guests.</p>
+      <label>Invite code<input name="inviteCode" autocomplete="one-time-code" required /></label>
+      <button class="primary-button full" value="default" type="submit">Continue</button>
+      <p class="form-status" data-code-status role="status"></p>
+    </form>
+  </dialog>
+  <footer class="footer">Jack &amp; Alex - Phoenix, Arizona</footer>
+  <script src="./script.js" type="module"></script>
+</body>
+</html>
+
