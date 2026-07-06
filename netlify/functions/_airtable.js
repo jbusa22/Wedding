@@ -41,6 +41,12 @@ function normalize(value) {
   return String(value || '').trim();
 }
 
+function normalizeZip(value) {
+  const cleanValue = normalize(value);
+  if (/^\d+$/.test(cleanValue)) return Number(cleanValue);
+  return cleanValue;
+}
+
 function required(payload, fields) {
   const missing = fields.filter((field) => !normalize(payload[field]));
   if (missing.length) {
@@ -199,6 +205,7 @@ module.exports = {
   json,
   inspectAirtableConfig,
   normalize,
+  normalizeZip,
   readInviteCode,
   required,
   validateInviteCode

@@ -1,4 +1,4 @@
-const { airtableFetch, getAirtableFieldName, json, normalize, readInviteCode, required, validateInviteCode } = require('./_airtable');
+const { airtableFetch, getAirtableFieldName, json, normalize, normalizeZip, readInviteCode, required, validateInviteCode } = require('./_airtable');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' });
@@ -28,7 +28,7 @@ exports.handler = async (event) => {
             'Street Address': normalize(payload.street),
             City: normalize(payload.city),
             State: normalize(payload.state).toUpperCase(),
-            Zip: normalize(payload.zip),
+            Zip: normalizeZip(payload.zip),
             Attending: normalize(payload.attending),
             'Guest Names': normalize(payload.guestNames),
             'Meal Choices': normalize(payload.mealChoices),
