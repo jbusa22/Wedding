@@ -1,4 +1,4 @@
-﻿const { airtableFetch, json, normalize, readInviteCode, required, validateInviteCode } = require('./_airtable');
+const { airtableFetch, getAirtableFieldName, json, normalize, readInviteCode, required, validateInviteCode } = require('./_airtable');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed.' });
@@ -15,12 +15,13 @@ exports.handler = async (event) => {
     if (missing) return json(400, { error: missing });
 
     const table = process.env.AIRTABLE_RSVP_TABLE || 'RSVPs';
+    const inviteCodeField = await getAirtableFieldName('AIRTABLE_RSVP_BASE_ID', table, 'Invite Code');
     await airtableFetch('AIRTABLE_RSVP_BASE_ID', table, '', {
       method: 'POST',
       body: JSON.stringify({
         records: [{
           fields: {
-            'Invite Code': inviteCode,
+            [inviteCodeField]: inviteCode,
             'Primary Name': normalize(payload.primaryName),
             Email: normalize(payload.email),
             Phone: normalize(payload.phone),

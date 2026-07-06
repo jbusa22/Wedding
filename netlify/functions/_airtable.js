@@ -59,6 +59,10 @@ function codepoints(value) {
     .join(' ');
 }
 
+function stripLeadingBom(value) {
+  return String(value || '').replace(/^\uFEFF/, '');
+}
+
 async function airtableRequest(url) {
   const token = getToken();
   const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -87,6 +91,16 @@ async function airtableFetch(baseIdEnvName, table, path = '', options = {}) {
     throw new Error(data.error?.message || 'Airtable request failed.');
   }
   return data;
+}
+
+async function getAirtableFieldName(baseIdEnvName, table, fieldName) {
+  const baseId = getBaseId(baseIdEnvName);
+  const metadata = await airtableRequest(`${AIRTABLE_API}/meta/bases/${encodeURIComponent(baseId)}/tables`);
+  if (!metadata.ok) return fieldName;
+
+  const matchedTable = (metadata.data.tables || []).find((item) => item.name === table || item.id === table);
+  const matchedField = matchedTable?.fields.find((field) => stripLeadingBom(field.name) === fieldName);
+  return matchedField?.name || fieldName;
 }
 
 async function inspectAirtableConfig() {
@@ -181,6 +195,7 @@ async function validateInviteCode(inviteCode) {
 
 module.exports = {
   airtableFetch,
+  getAirtableFieldName,
   json,
   inspectAirtableConfig,
   normalize,
