@@ -53,11 +53,8 @@ Add these in Netlify under Site configuration -> Environment variables:
 - `AIRTABLE_INVITES_BASE_ID`
   - Base ID for the Invites base. Starts with `app`.
 - `AIRTABLE_RSVP_TABLE`
-  - Recommended value: `RSVPs`.
 - `AIRTABLE_REGISTRY_TABLE`
-  - Recommended value: `Registry`.
 - `AIRTABLE_INVITES_TABLE`
-  - Recommended value: `Invites`.
   - Optional for early testing. If omitted, any invite code with 3-40 characters is accepted.
 
 ## How to find Airtable base IDs
