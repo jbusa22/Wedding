@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RSVP — Jack &amp; Liza</title>
+  <meta name="description" content="Reply to Jack and Liza's wedding invitation." />
+  <meta name="theme-color" content="#153d31" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Italiana&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="inner-page" data-private-page="rsvp">
+  <div class="page-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header scrolled">
+    <a class="brand" href="./index.html" aria-label="Jack and Liza — home"><span>J</span><i>&amp;</i><span>L</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span><span class="sr-only">Open menu</span>
+    </button>
+    <nav class="nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="./index.html#schedule">The weekend</a>
+      <a href="./index.html#travel">Berkeley</a>
+      <a href="./rsvp.html" aria-current="page">RSVP</a>
+      <a href="./registry.html">Registry</a>
+      <a href="./index.html#faq">Details</a>
+    </nav>
+    <a class="text-button guest-code" href="./index.html">Wedding home <span>↗</span></a>
+  </header>
+
+  <main class="private-page-main">
+    <section class="private-hero">
+      <div>
+        <p class="eyebrow">Please reply</p>
+        <h1>Will we see<br><i>you there?</i></h1>
+        <p>Use the code printed on your invitation to open your RSVP. We’ll remember it on this device.</p>
+      </div>
+      <aside class="access-gate" data-access-gate>
+        <span class="gate-number">01</span>
+        <p class="eyebrow">Guest access</p>
+        <h2>Have your invitation handy?</h2>
+        <p>Your code keeps guest responses connected to the right household.</p>
+        <button class="button button-light" type="button" data-open-code>Enter invite code <span>→</span></button>
+        <p class="gate-status" data-gate-status role="status"></p>
+      </aside>
+    </section>
+
+    <section class="section rsvp-section private-content" data-private-content hidden>
+      <div class="rsvp-heading reveal">
+        <p class="eyebrow">Your response</p>
+        <h2>We can’t wait<br><i>to celebrate.</i></h2>
+        <p>Tell us who’s coming, what you’d like to eat, and the song that will get you onto the dance floor.</p>
+        <button class="text-button light-text" type="button" data-change-code>Use a different code <span>↗</span></button>
+      </div>
+      <form id="rsvp-form" class="panel-form reveal" autocomplete="on">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
+        <input type="hidden" name="loadedAt" data-loaded-at />
+        <div class="form-section-label"><span>01</span> Your details</div>
+        <div class="field-pair">
+          <label>Primary name<input name="primaryName" required /></label>
+          <label>Email<input name="email" type="email" required /></label>
+        </div>
+        <div class="field-pair">
+          <label>Phone <small>optional</small><input name="phone" type="tel" /></label>
+          <label>Will you attend?<select name="attending" required><option value="">Choose one</option><option>Yes</option><option>No</option></select></label>
+        </div>
+        <div class="form-section-label"><span>02</span> Mailing address</div>
+        <label>Street address<input name="street" required /></label>
+        <div class="field-triplet">
+          <label>City<input name="city" required /></label>
+          <label>State<input name="state" maxlength="2" required /></label>
+          <label>ZIP<input name="zip" inputmode="numeric" required /></label>
+        </div>
+        <div class="form-section-label"><span>03</span> Your party</div>
+        <label>Guest names<textarea name="guestNames" rows="3" placeholder="Everyone included in this RSVP"></textarea></label>
+        <div class="field-pair">
+          <label>Meal choices<textarea name="mealChoices" rows="3"></textarea></label>
+          <label>Dietary restrictions<textarea name="dietaryRestrictions" rows="3"></textarea></label>
+        </div>
+        <div class="field-pair">
+          <label>Song request<input name="songRequest" /></label>
+          <label>Anything else?<textarea name="notes" rows="2"></textarea></label>
+        </div>
+        <button class="button button-dark full" type="submit">Send our RSVP <span>→</span></button>
+        <p class="form-status" data-rsvp-status role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="code-dialog" class="code-dialog">
+    <form method="dialog" class="code-box" id="code-form">
+      <button class="dialog-close" aria-label="Close" type="button" data-close-code>×</button>
+      <p class="eyebrow">Guest access</p>
+      <h2>Your invite code</h2>
+      <p>Enter the code exactly as it appears on your invitation.</p>
+      <label>Invite code<input name="inviteCode" autocomplete="one-time-code" required /></label>
+      <button class="button button-dark full" value="default" type="submit">Continue <span>→</span></button>
+      <p class="form-status" data-code-status role="status"></p>
+    </form>
+  </dialog>
+
+  <footer class="footer compact-footer">
+    <div class="footer-monogram">J<span>&amp;</span>L</div>
+    <p>With love, from Berkeley</p>
+    <a href="./index.html">Wedding home ↑</a>
+  </footer>
+  <script src="./script.js" type="module"></script>
+</body>
+</html>

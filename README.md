@@ -2,6 +2,8 @@
 
 Static wedding site for Netlify with RSVP and registry data stored in Airtable.
 
+The public wedding details live on `index.html`. RSVP and registry are separate guest-only pages at `rsvp.html` and `registry.html`. Both validate the invitation code before revealing private content, and the registry endpoint is not called until that validation succeeds.
+
 ## What still needs to be done
 
 1. Create three Airtable bases:
@@ -25,6 +27,9 @@ The frontend does not call Airtable directly. It calls these Netlify Functions, 
 
 Expected deployed endpoints:
 
+- `/.netlify/functions/invite`
+  - Method: `GET`
+  - Validates the guest code before unlocking RSVP or registry content.
 - `/.netlify/functions/rsvp`
   - Method: `POST`
   - Used by the RSVP form.

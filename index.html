@@ -23,11 +23,11 @@
     <nav class="nav" id="primary-nav" aria-label="Primary navigation">
       <a href="#schedule">The weekend</a>
       <a href="#travel">Berkeley</a>
-      <a href="#rsvp">RSVP</a>
-      <a href="#registry">Registry</a>
+      <a href="./rsvp.html">RSVP</a>
+      <a href="./registry.html">Registry</a>
       <a href="#faq">Details</a>
     </nav>
-    <button class="text-button guest-code" type="button" data-open-code>Guest code <span>↗</span></button>
+    <a class="text-button guest-code" href="./rsvp.html">RSVP <span>↗</span></a>
   </header>
 
   <main>
@@ -43,7 +43,7 @@
         <h1><span>Jack</span><em>&amp;</em><span>Liza</span></h1>
         <p class="hero-copy">Join us as we exchange vows among the redwoods, with the whole Bay stretching out below us.</p>
         <div class="hero-actions">
-          <a class="button button-light" href="#rsvp">Reply to the invitation</a>
+          <a class="button button-light" href="./rsvp.html">Reply to the invitation</a>
           <a class="quiet-link" href="#schedule">Explore the weekend <span>↓</span></a>
         </div>
       </div>
@@ -120,60 +120,6 @@
       </div>
     </section>
 
-    <section id="rsvp" class="section rsvp-section protected-section" data-protected>
-      <div class="rsvp-heading reveal">
-        <p class="eyebrow">Please reply</p>
-        <h2>Will we see<br><i>you there?</i></h2>
-        <p>Enter the invite code from your invitation once. We’ll remember it on this device and attach it to your RSVP.</p>
-        <button class="text-button light-text" type="button" data-open-code>Enter guest code <span>↗</span></button>
-      </div>
-      <form id="rsvp-form" class="panel-form reveal" autocomplete="on">
-        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
-        <input type="hidden" name="loadedAt" data-loaded-at />
-        <div class="form-section-label"><span>01</span> Your details</div>
-        <div class="field-pair">
-          <label>Primary name<input name="primaryName" required /></label>
-          <label>Email<input name="email" type="email" required /></label>
-        </div>
-        <div class="field-pair">
-          <label>Phone <small>optional</small><input name="phone" type="tel" /></label>
-          <label>Will you attend?<select name="attending" required><option value="">Choose one</option><option>Yes</option><option>No</option></select></label>
-        </div>
-        <div class="form-section-label"><span>02</span> Mailing address</div>
-        <label>Street address<input name="street" required /></label>
-        <div class="field-triplet">
-          <label>City<input name="city" required /></label>
-          <label>State<input name="state" maxlength="2" required /></label>
-          <label>ZIP<input name="zip" inputmode="numeric" required /></label>
-        </div>
-        <div class="form-section-label"><span>03</span> Your party</div>
-        <label>Guest names<textarea name="guestNames" rows="3" placeholder="Everyone included in this RSVP"></textarea></label>
-        <div class="field-pair">
-          <label>Meal choices<textarea name="mealChoices" rows="3"></textarea></label>
-          <label>Dietary restrictions<textarea name="dietaryRestrictions" rows="3"></textarea></label>
-        </div>
-        <div class="field-pair">
-          <label>Song request<input name="songRequest" /></label>
-          <label>Anything else?<textarea name="notes" rows="2"></textarea></label>
-        </div>
-        <button class="button button-dark full" type="submit">Send our RSVP <span>→</span></button>
-        <p class="form-status" data-rsvp-status role="status"></p>
-      </form>
-    </section>
-
-    <section id="registry" class="section registry-section protected-section" data-protected>
-      <div class="section-heading-row reveal">
-        <div>
-          <p class="eyebrow">Registry</p>
-          <h2>More than enough.</h2>
-          <p>Your presence is the best gift. For those who have asked, a few ideas are gathered below.</p>
-        </div>
-        <button class="outline-button" type="button" data-refresh-registry>Refresh gifts</button>
-      </div>
-      <div id="registry-grid" class="registry-grid" aria-live="polite"></div>
-      <p class="form-status" data-registry-status role="status"></p>
-    </section>
-
     <section id="faq" class="section faq-section">
       <div class="faq-heading reveal">
         <p class="eyebrow">Good to know</p>
@@ -186,18 +132,6 @@
       </div>
     </section>
   </main>
-
-  <dialog id="code-dialog" class="code-dialog">
-    <form method="dialog" class="code-box" id="code-form">
-      <button class="dialog-close" aria-label="Close" type="button" data-close-code>×</button>
-      <p class="eyebrow">Guest access</p>
-      <h2>Your invite code</h2>
-      <p>Your code lets us show RSVP and registry details for invited guests.</p>
-      <label>Invite code<input name="inviteCode" autocomplete="one-time-code" required /></label>
-      <button class="button button-dark full" value="default" type="submit">Continue <span>→</span></button>
-      <p class="form-status" data-code-status role="status"></p>
-    </form>
-  </dialog>
 
   <footer class="footer">
     <div class="footer-monogram">J<span>&amp;</span>L</div>

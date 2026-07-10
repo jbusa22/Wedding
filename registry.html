@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registry — Jack &amp; Liza</title>
+  <meta name="description" content="Jack and Liza's wedding registry for invited guests." />
+  <meta name="theme-color" content="#153d31" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Italiana&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="inner-page" data-private-page="registry">
+  <div class="page-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header scrolled">
+    <a class="brand" href="./index.html" aria-label="Jack and Liza — home"><span>J</span><i>&amp;</i><span>L</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span><span class="sr-only">Open menu</span>
+    </button>
+    <nav class="nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="./index.html#schedule">The weekend</a>
+      <a href="./index.html#travel">Berkeley</a>
+      <a href="./rsvp.html">RSVP</a>
+      <a href="./registry.html" aria-current="page">Registry</a>
+      <a href="./index.html#faq">Details</a>
+    </nav>
+    <a class="text-button guest-code" href="./index.html">Wedding home <span>↗</span></a>
+  </header>
+
+  <main class="private-page-main registry-page">
+    <section class="private-hero">
+      <div>
+        <p class="eyebrow">Wedding registry</p>
+        <h1>More than<br><i>enough.</i></h1>
+        <p>Your presence is the best gift. For those who have asked, we’ve gathered a few ideas.</p>
+      </div>
+      <aside class="access-gate" data-access-gate>
+        <span class="gate-number">02</span>
+        <p class="eyebrow">For invited guests</p>
+        <h2>Open the registry</h2>
+        <p>Enter the code from your invitation to view the live registry. Nothing loads before then.</p>
+        <button class="button button-light" type="button" data-open-code>Enter invite code <span>→</span></button>
+        <p class="gate-status" data-gate-status role="status"></p>
+      </aside>
+    </section>
+
+    <section class="section registry-section private-content" data-private-content hidden>
+      <div class="section-heading-row reveal">
+        <div>
+          <p class="eyebrow">Registry</p>
+          <h2>A few thoughtful things.</h2>
+          <p>Thank you for thinking of us. Each item below is connected directly to our live registry.</p>
+        </div>
+        <div class="registry-actions">
+          <button class="outline-button" type="button" data-change-code>Change code</button>
+          <button class="outline-button" type="button" data-refresh-registry>Refresh gifts</button>
+        </div>
+      </div>
+      <div id="registry-grid" class="registry-grid" aria-live="polite"></div>
+      <div class="registry-empty" data-registry-empty hidden>
+        <p class="eyebrow">All set</p>
+        <h3>No registry items are available right now.</h3>
+        <p>Please check back later, or simply bring yourselves—we mean it.</p>
+      </div>
+      <p class="form-status" data-registry-status role="status"></p>
+    </section>
+  </main>
+
+  <dialog id="code-dialog" class="code-dialog">
+    <form method="dialog" class="code-box" id="code-form">
+      <button class="dialog-close" aria-label="Close" type="button" data-close-code>×</button>
+      <p class="eyebrow">Guest access</p>
+      <h2>Your invite code</h2>
+      <p>Enter the code exactly as it appears on your invitation.</p>
+      <label>Invite code<input name="inviteCode" autocomplete="one-time-code" required /></label>
+      <button class="button button-dark full" value="default" type="submit">View registry <span>→</span></button>
+      <p class="form-status" data-code-status role="status"></p>
+    </form>
+  </dialog>
+
+  <footer class="footer compact-footer">
+    <div class="footer-monogram">J<span>&amp;</span>L</div>
+    <p>With love, from Berkeley</p>
+    <a href="./index.html">Wedding home ↑</a>
+  </footer>
+  <script src="./script.js" type="module"></script>
+</body>
+</html>
