@@ -11,6 +11,7 @@ const header = document.querySelector('.site-header');
 const progressBar = document.querySelector('.page-progress span');
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav');
+let suppressInvitePrompt = false;
 
 function updateChrome() {
   header.classList.toggle('scrolled', window.scrollY > 30);
@@ -78,7 +79,13 @@ function openCodeDialog() {
 }
 
 function ensureInviteCode() {
-  if (!getInviteCode()) openCodeDialog();
+  if (!suppressInvitePrompt && !getInviteCode()) openCodeDialog();
+}
+
+function dismissCodeDialog() {
+  suppressInvitePrompt = true;
+  codeDialog.close();
+  window.setTimeout(() => { suppressInvitePrompt = false; }, 300);
 }
 
 function status(node, message, isError = false) {
@@ -171,6 +178,12 @@ async function claimGift(itemId) {
 
 document.querySelectorAll('[data-open-code]').forEach((button) => {
   button.addEventListener('click', openCodeDialog);
+});
+
+document.querySelector('[data-close-code]').addEventListener('click', dismissCodeDialog);
+codeDialog.addEventListener('cancel', () => {
+  suppressInvitePrompt = true;
+  window.setTimeout(() => { suppressInvitePrompt = false; }, 300);
 });
 
 codeForm.addEventListener('submit', (event) => {
