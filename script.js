@@ -7,6 +7,45 @@ const registryStatus = document.querySelector('[data-registry-status]');
 const rsvpStatus = document.querySelector('[data-rsvp-status]');
 const loadedAtInput = document.querySelector('[data-loaded-at]');
 
+const header = document.querySelector('.site-header');
+const progressBar = document.querySelector('.page-progress span');
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.nav');
+
+function updateChrome() {
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = `${scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0}%`;
+}
+
+function closeMenu() {
+  menuToggle.setAttribute('aria-expanded', 'false');
+  nav.classList.remove('open');
+  document.body.classList.remove('menu-open');
+}
+
+menuToggle.addEventListener('click', () => {
+  const willOpen = menuToggle.getAttribute('aria-expanded') !== 'true';
+  menuToggle.setAttribute('aria-expanded', String(willOpen));
+  nav.classList.toggle('open', willOpen);
+  document.body.classList.toggle('menu-open', willOpen);
+});
+
+nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+window.addEventListener('scroll', updateChrome, { passive: true });
+updateChrome();
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+
+document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
 loadedAtInput.value = String(Date.now());
 
 const demoRegistryItems = [
