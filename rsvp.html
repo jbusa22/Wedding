@@ -50,7 +50,12 @@
         <p class="eyebrow">Your response</p>
         <h2>We can’t wait<br><i>to celebrate.</i></h2>
         <p>Tell us who’s coming, what you’d like to eat, and the song that will get you onto the dance floor.</p>
-        <button class="text-button light-text" type="button" data-change-code>Choose a different party <span>↗</span></button>
+      </div>
+      <div class="panel-form rsvp-loading-panel" data-rsvp-loading hidden aria-label="Loading your RSVP">
+        <span class="skeleton skeleton-kicker"></span>
+        <span class="skeleton skeleton-heading"></span>
+        <span class="skeleton skeleton-line"></span>
+        <span class="skeleton skeleton-line short"></span>
       </div>
       <form id="rsvp-form" class="panel-form reveal" autocomplete="on">
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
@@ -84,6 +89,12 @@
         <button class="button button-dark full" type="submit" data-rsvp-submit>Send our RSVP <span>→</span></button>
         <p class="form-status" data-rsvp-status role="status"></p>
       </form>
+      <section class="rsvp-confirmation reveal" data-rsvp-confirmation hidden aria-live="polite">
+        <p class="eyebrow">RSVP saved</p>
+        <h3>Thank you,<br><i>we have your reply.</i></h3>
+        <p>Your response is safely recorded. If plans change, you can update it anytime from this device.</p>
+        <button class="button button-dark" type="button" data-edit-rsvp>Edit RSVP <span>→</span></button>
+      </section>
     </section>
   </main>
 

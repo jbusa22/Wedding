@@ -14,9 +14,12 @@ const privateContent = document.querySelector('[data-private-content]');
 const registryGrid = document.querySelector('#registry-grid');
 const registryEmpty = document.querySelector('[data-registry-empty]');
 const registryStatus = document.querySelector('[data-registry-status]');
+const registryRefresh = document.querySelector('[data-refresh-registry]');
 const rsvpForm = document.querySelector('#rsvp-form');
 const rsvpStatus = document.querySelector('[data-rsvp-status]');
 const rsvpSubmit = document.querySelector('[data-rsvp-submit]');
+const rsvpLoading = document.querySelector('[data-rsvp-loading]');
+const rsvpConfirmation = document.querySelector('[data-rsvp-confirmation]');
 const loadedAtInput = document.querySelector('[data-loaded-at]');
 const privatePage = document.body.dataset.privatePage || '';
 let suppressInvitePrompt = false;
@@ -91,6 +94,27 @@ function status(node, message, isError = false) {
   if (!node) return;
   node.textContent = message;
   node.classList.toggle('error', isError);
+}
+
+function setButtonLoading(button, isLoading, label = 'Loading…') {
+  if (!button) return;
+  if (isLoading) {
+    if (!button.dataset.idleHtml) {
+      button.dataset.idleHtml = button.innerHTML;
+      button.dataset.idleDisabled = String(button.disabled);
+    }
+    button.disabled = true;
+    button.classList.add('is-loading');
+    button.innerHTML = `<span class="loading-spinner" aria-hidden="true"></span><span>${escapeHtml(label)}</span>`;
+  } else {
+    button.disabled = button.dataset.idleDisabled === 'true';
+    button.classList.remove('is-loading');
+    if (button.dataset.idleHtml) {
+      button.innerHTML = button.dataset.idleHtml;
+      delete button.dataset.idleHtml;
+      delete button.dataset.idleDisabled;
+    }
+  }
 }
 
 function openCodeDialog() {
@@ -223,14 +247,31 @@ function renderRegistry(items) {
   });
 }
 
-async function loadRegistry() {
+function renderRegistryLoading() {
+  if (!registryGrid) return;
+  if (registryEmpty) registryEmpty.hidden = true;
+  registryGrid.innerHTML = Array.from({ length: 3 }, () => `
+    <article class="registry-card registry-card-skeleton" aria-hidden="true">
+      <span class="skeleton skeleton-image"></span>
+      <div class="registry-card-body">
+        <span class="skeleton skeleton-heading"></span>
+        <span class="skeleton skeleton-line short"></span>
+        <span class="skeleton skeleton-button"></span>
+      </div>
+    </article>
+  `).join('');
+}
+
+async function loadRegistry({ showSkeleton = true } = {}) {
   if (!registryGrid || !getInviteCode()) {
     showAccessGate();
     return;
   }
 
   showPrivateContent();
-  status(registryStatus, 'Loading registry…');
+  if (showSkeleton) renderRegistryLoading();
+  status(registryStatus, '');
+  setButtonLoading(registryRefresh, true, 'Refreshing…');
   registryGrid.setAttribute('aria-busy', 'true');
 
   try {
@@ -253,17 +294,24 @@ async function loadRegistry() {
     }
   } finally {
     registryGrid.removeAttribute('aria-busy');
+    setButtonLoading(registryRefresh, false);
   }
 }
 
-async function updateGiftClaim(itemId, quantity) {
+async function updateGiftClaim(itemId, quantity, button) {
   if (!getInviteCode()) {
     showAccessGate();
     openCodeDialog();
     return;
   }
 
-  status(registryStatus, 'Updating your gift claim…');
+  const card = button?.closest('.registry-card');
+  const cardButtons = card ? Array.from(card.querySelectorAll('button')) : [];
+  const cardButtonStates = cardButtons.map((cardButton) => ({ button: cardButton, disabled: cardButton.disabled }));
+  setButtonLoading(button, true, quantity ? 'Saving…' : 'Removing…');
+  cardButtons.forEach((cardButton) => { cardButton.disabled = true; });
+  card?.setAttribute('aria-busy', 'true');
+  status(registryStatus, '');
   try {
     const response = await apiFetch('/.netlify/functions/registry-claim', {
       method: 'POST',
@@ -275,7 +323,7 @@ async function updateGiftClaim(itemId, quantity) {
       error.status = response.status;
       throw error;
     }
-    await loadRegistry();
+    await loadRegistry({ showSkeleton: false });
     status(registryStatus, quantity ? 'Your gift claim has been updated.' : 'Your gift claim has been removed.');
   } catch (error) {
     if (error.status === 401) {
@@ -284,19 +332,17 @@ async function updateGiftClaim(itemId, quantity) {
     } else {
       status(registryStatus, error.message, true);
     }
+    if (button?.isConnected) {
+      setButtonLoading(button, false);
+      cardButtonStates.forEach((state) => { state.button.disabled = state.disabled; });
+    }
+  } finally {
+    card?.removeAttribute('aria-busy');
   }
 }
 
 document.querySelectorAll('[data-open-code]').forEach((button) => {
   button.addEventListener('click', openCodeDialog);
-});
-
-document.querySelectorAll('[data-change-code]').forEach((button) => {
-  button.addEventListener('click', () => {
-    clearInviteCode();
-    showAccessGate();
-    openCodeDialog();
-  });
 });
 
 document.querySelector('[data-close-code]')?.addEventListener('click', dismissCodeDialog);
@@ -317,8 +363,8 @@ codeForm?.addEventListener('submit', async (event) => {
   }
 
   const submitButton = codeForm.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  status(codeStatus, 'Searching invitations…');
+  setButtonLoading(submitButton, true, 'Searching…');
+  status(codeStatus, '');
 
   try {
     await searchParties(query);
@@ -326,28 +372,28 @@ codeForm?.addEventListener('submit', async (event) => {
   } catch (error) {
     status(codeStatus, 'We couldn’t search invitations right now. Please try again shortly.', true);
   } finally {
-    submitButton.disabled = false;
+    setButtonLoading(submitButton, false);
   }
 });
 
 partyResults?.addEventListener('click', async (event) => {
   const button = event.target.closest('[data-party-token]');
   if (!button) return;
-  button.disabled = true;
-  status(codeStatus, 'Opening your party…');
+  setButtonLoading(button, true, 'Opening…');
+  status(codeStatus, '');
   try {
     await activateParty(button.dataset.partyToken);
   } catch (error) {
     status(codeStatus, 'We couldn’t open that party. Please search again.', true);
-    button.disabled = false;
+    setButtonLoading(button, false);
   }
 });
 
-document.querySelector('[data-refresh-registry]')?.addEventListener('click', loadRegistry);
+registryRefresh?.addEventListener('click', () => loadRegistry());
 
 registryGrid?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-claim-item]');
-  if (button) updateGiftClaim(button.dataset.claimItem, Number(button.dataset.claimQuantity));
+  if (button) updateGiftClaim(button.dataset.claimItem, Number(button.dataset.claimQuantity), button);
 });
 
 function fillRsvpForm(values) {
@@ -358,9 +404,16 @@ function fillRsvpForm(values) {
   });
 }
 
+function showRsvpView(view) {
+  if (rsvpLoading) rsvpLoading.hidden = view !== 'loading';
+  if (rsvpForm) rsvpForm.hidden = view !== 'form';
+  if (rsvpConfirmation) rsvpConfirmation.hidden = view !== 'confirmation';
+}
+
 async function loadRsvp() {
   if (!rsvpForm || !getInviteCode()) return;
-  status(rsvpStatus, 'Loading your RSVP…');
+  showRsvpView('loading');
+  status(rsvpStatus, '');
   try {
     const response = await apiFetch('/.netlify/functions/rsvp');
     const data = await response.json().catch(() => ({}));
@@ -372,9 +425,10 @@ async function loadRsvp() {
     if (data.rsvp) {
       fillRsvpForm(data.rsvp);
       if (rsvpSubmit) rsvpSubmit.innerHTML = 'Update our RSVP <span>→</span>';
-      status(rsvpStatus, 'Your saved RSVP is ready to edit.');
+      showRsvpView('confirmation');
     } else {
       if (rsvpSubmit) rsvpSubmit.innerHTML = 'Send our RSVP <span>→</span>';
+      showRsvpView('form');
       status(rsvpStatus, '');
     }
     resetLoadedAt();
@@ -383,10 +437,18 @@ async function loadRsvp() {
       clearInviteCode();
       showAccessGate('We couldn’t find that party. Please search again.', true);
     } else {
+      showRsvpView('form');
       status(rsvpStatus, error.message, true);
     }
   }
 }
+
+document.querySelector('[data-edit-rsvp]')?.addEventListener('click', () => {
+  showRsvpView('form');
+  status(rsvpStatus, 'Make any changes below, then save your RSVP.');
+  resetLoadedAt();
+  rsvpForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -397,7 +459,8 @@ rsvpForm?.addEventListener('submit', async (event) => {
   }
 
   const payload = Object.fromEntries(new FormData(rsvpForm).entries());
-  status(rsvpStatus, 'Sending RSVP…');
+  setButtonLoading(rsvpSubmit, true, 'Saving RSVP…');
+  status(rsvpStatus, '');
   try {
     const response = await apiFetch('/.netlify/functions/rsvp', {
       method: 'POST',
@@ -409,10 +472,12 @@ rsvpForm?.addEventListener('submit', async (event) => {
       error.status = response.status;
       throw error;
     }
-    status(rsvpStatus, data.updated ? 'RSVP updated. Thank you.' : 'RSVP received. Thank you.');
+    setButtonLoading(rsvpSubmit, false);
     if (rsvpSubmit) rsvpSubmit.innerHTML = 'Update our RSVP <span>→</span>';
+    showRsvpView('confirmation');
     resetLoadedAt();
   } catch (error) {
+    setButtonLoading(rsvpSubmit, false);
     if (error.status === 401) {
       clearInviteCode();
       showAccessGate('We couldn’t find that party. Please search again.', true);
