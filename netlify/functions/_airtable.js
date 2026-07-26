@@ -59,6 +59,79 @@ function escapeFormulaValue(value) {
   return String(value).replace(/'/g, "\\'");
 }
 
+function invitePartyName(record) {
+  return normalize(record?.fields?.['Party Names'] || record?.fields?.['Invite Code']);
+}
+
+async function findInvite(inviteCode) {
+  if (!inviteCode || inviteCode.length < 2 || inviteCode.length > 120) return null;
+  const table = process.env.AIRTABLE_INVITES_TABLE;
+  if (!table) return { id: inviteCode, fields: { 'Party Names': inviteCode } };
+
+  if (/^rec[a-zA-Z0-9]{10,}$/.test(inviteCode)) {
+    try {
+      return await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `/${encodeURIComponent(inviteCode)}`);
+    } catch (error) {
+      if (/not found/i.test(error.message || '')) return null;
+      throw error;
+    }
+  }
+
+  const formula = encodeURIComponent(`{Party Names} = '${escapeFormulaValue(inviteCode)}'`);
+  let data;
+  try {
+    data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=1&filterByFormula=${formula}`);
+  } catch (error) {
+    if (/Unknown field names/i.test(error.message || '')) {
+      const legacyFormula = encodeURIComponent(`{Invite Code} = '${escapeFormulaValue(inviteCode)}'`);
+      try {
+        data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=1&filterByFormula=${legacyFormula}`);
+      } catch (legacyError) {
+        if (/Unknown field names/i.test(legacyError.message || '')) return null;
+        throw legacyError;
+      }
+    } else {
+      throw error;
+    }
+  }
+  return data.records?.[0] || null;
+}
+
+function matchScore(name, query) {
+  const candidate = name.toLocaleLowerCase();
+  const terms = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  if (candidate === terms.join(' ')) return 0;
+  if (terms.some((term) => candidate.split(/[^a-z0-9]+/).includes(term))) return 1;
+  if (terms.every((term) => candidate.includes(term))) return 2;
+  return 3;
+}
+
+async function searchInvites(query) {
+  const cleanQuery = normalize(query);
+  if (cleanQuery.length < 2 || cleanQuery.length > 80) return [];
+  const table = process.env.AIRTABLE_INVITES_TABLE;
+  if (!table) return [{ token: cleanQuery, name: cleanQuery }];
+
+  const formula = encodeURIComponent(`SEARCH(LOWER('${escapeFormulaValue(cleanQuery)}'), LOWER({Party Names}))`);
+  let data;
+  try {
+    data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=10&filterByFormula=${formula}`);
+  } catch (error) {
+    if (/Unknown field names/i.test(error.message || '')) {
+      throw new Error('Invite search is misconfigured. Add a "Party Names" field to the Invites table.');
+    }
+    throw error;
+  }
+
+  return (data.records || [])
+    .map((record) => {
+      const name = invitePartyName(record);
+      return { token: name, name };
+    })
+    .filter((match) => match.name)
+    .sort((a, b) => matchScore(a.name, cleanQuery) - matchScore(b.name, cleanQuery) || a.name.localeCompare(b.name));
+}
+
 function codepoints(value) {
   return Array.from(String(value || ''))
     .map((char) => char.charCodeAt(0).toString(16).padStart(4, '0'))
@@ -182,32 +255,20 @@ async function inspectAirtableConfig() {
 }
 
 async function validateInviteCode(inviteCode) {
-  if (!inviteCode || inviteCode.length < 3 || inviteCode.length > 40) return false;
-  const table = process.env.AIRTABLE_INVITES_TABLE;
-  if (!table) return true;
-
-  const formula = encodeURIComponent(`{Invite Code} = '${escapeFormulaValue(inviteCode)}'`);
-  let data;
-  try {
-    data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=1&filterByFormula=${formula}`);
-  } catch (error) {
-    if (/Unknown field names/i.test(error.message || '')) {
-      throw new Error('Invite validation is misconfigured. Check that AIRTABLE_INVITES_BASE_ID points to the Invites base, AIRTABLE_INVITES_TABLE points to the Invites table, and that table has a field named "Invite Code".');
-    }
-    throw error;
-  }
-  return Array.isArray(data.records) && data.records.length > 0;
+  return Boolean(await findInvite(inviteCode));
 }
 
 module.exports = {
   airtableFetch,
   getAirtableFieldName,
+  findInvite,
   json,
   inspectAirtableConfig,
   normalize,
   normalizeZip,
   readInviteCode,
   required,
+  searchInvites,
   validateInviteCode
 };
 

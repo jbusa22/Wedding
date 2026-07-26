@@ -9,14 +9,19 @@ exports.handler = async (event) => {
 
     const table = process.env.AIRTABLE_REGISTRY_TABLE || 'Registry';
     const data = await airtableFetch('AIRTABLE_REGISTRY_BASE_ID', table, '?sort%5B0%5D%5Bfield%5D=Name&sort%5B0%5D%5Bdirection%5D=asc');
-    const items = (data.records || []).map((record) => ({
-      id: record.id,
-      name: normalize(record.fields.Name),
-      image: Array.isArray(record.fields.Image) ? record.fields.Image[0]?.url : normalize(record.fields.Image),
-      price: Number(record.fields.Price || 0),
-      quantity: Number(record.fields.Quantity || 1),
-      claimed: Number(record.fields.Claimed || 0)
-    })).filter((item) => item.name);
+    const items = (data.records || []).map((record) => {
+      let claims = {};
+      try { claims = JSON.parse(normalize(record.fields['Claims By Party']) || '{}'); } catch { claims = {}; }
+      return {
+        id: record.id,
+        name: normalize(record.fields.Name),
+        image: Array.isArray(record.fields.Image) ? record.fields.Image[0]?.url : normalize(record.fields.Image),
+        price: Number(record.fields.Price || 0),
+        quantity: Number(record.fields.Quantity || 1),
+        claimed: Number(record.fields.Claimed || 0),
+        claimedByYou: Number(claims[inviteCode] || 0)
+      };
+    }).filter((item) => item.name);
 
     return json(200, { items });
   } catch (error) {

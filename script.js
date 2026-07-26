@@ -7,6 +7,7 @@ const nav = document.querySelector('.nav');
 const codeDialog = document.querySelector('#code-dialog');
 const codeForm = document.querySelector('#code-form');
 const codeStatus = document.querySelector('[data-code-status]');
+const partyResults = document.querySelector('[data-party-results]');
 const accessGate = document.querySelector('[data-access-gate]');
 const gateStatus = document.querySelector('[data-gate-status]');
 const privateContent = document.querySelector('[data-private-content]');
@@ -15,6 +16,7 @@ const registryEmpty = document.querySelector('[data-registry-empty]');
 const registryStatus = document.querySelector('[data-registry-status]');
 const rsvpForm = document.querySelector('#rsvp-form');
 const rsvpStatus = document.querySelector('[data-rsvp-status]');
+const rsvpSubmit = document.querySelector('[data-rsvp-submit]');
 const loadedAtInput = document.querySelector('[data-loaded-at]');
 const privatePage = document.body.dataset.privatePage || '';
 let suppressInvitePrompt = false;
@@ -94,6 +96,7 @@ function status(node, message, isError = false) {
 function openCodeDialog() {
   if (!codeDialog) return;
   status(codeStatus, '');
+  if (partyResults) partyResults.innerHTML = '';
   codeDialog.showModal();
 }
 
@@ -140,6 +143,47 @@ async function validateInviteCode(code) {
   }
 }
 
+async function activateParty(token) {
+  await validateInviteCode(token);
+  setInviteCode(token);
+  codeDialog?.close();
+  showPrivateContent();
+  if (privatePage === 'registry') await loadRegistry();
+  if (privatePage === 'rsvp') await loadRsvp();
+}
+
+function renderPartyMatches(matches) {
+  if (!partyResults) return;
+  partyResults.innerHTML = '';
+  if (!matches.length) {
+    const message = document.createElement('p');
+    message.className = 'party-no-results';
+    message.textContent = 'No matching party found. Try another first or last name.';
+    partyResults.appendChild(message);
+    return;
+  }
+
+  const heading = document.createElement('p');
+  heading.className = 'party-results-label';
+  heading.textContent = matches.length === 1 ? 'Is this your party?' : 'Choose your party';
+  partyResults.appendChild(heading);
+  matches.forEach((match) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'party-result';
+    button.dataset.partyToken = match.token;
+    button.textContent = match.name;
+    partyResults.appendChild(button);
+  });
+}
+
+async function searchParties(query) {
+  const response = await fetch(`/.netlify/functions/invite?q=${encodeURIComponent(query)}`);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Unable to search invitations.');
+  renderPartyMatches(data.matches || []);
+}
+
 function money(value) {
   const amount = Number(value || 0);
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
@@ -156,6 +200,15 @@ function renderRegistry(items) {
 
   items.forEach((item) => {
     const remaining = Math.max(Number(item.quantity || 0) - Number(item.claimed || 0), 0);
+    const claimedByYou = Math.max(Number(item.claimedByYou || 0), 0);
+    const availableToYou = remaining + claimedByYou;
+    const claimControls = claimedByYou
+      ? `<div class="registry-claim-editor">
+          <button class="outline-button" type="button" data-claim-item="${escapeHtml(item.id)}" data-claim-quantity="${claimedByYou - 1}">${claimedByYou === 1 ? 'Remove' : '−'}</button>
+          <span>Your claim: ${claimedByYou}</span>
+          <button class="outline-button" type="button" data-claim-item="${escapeHtml(item.id)}" data-claim-quantity="${claimedByYou + 1}" ${claimedByYou >= availableToYou ? 'disabled' : ''} aria-label="Claim one more">+</button>
+        </div>`
+      : `<button class="button button-dark full" type="button" ${remaining ? '' : 'disabled'} data-claim-item="${escapeHtml(item.id)}" data-claim-quantity="1">${remaining ? 'Claim gift' : 'Claimed'}</button>`;
     const card = document.createElement('article');
     card.className = 'registry-card';
     card.innerHTML = `
@@ -163,7 +216,7 @@ function renderRegistry(items) {
       <div class="registry-card-body">
         <h3>${escapeHtml(item.name)}</h3>
         <div class="registry-meta"><span>${money(item.price)}</span><span>${remaining} left</span></div>
-        <button class="button button-dark full" type="button" ${remaining ? '' : 'disabled'} data-claim="${escapeHtml(item.id)}">${remaining ? 'Claim gift' : 'Claimed'}</button>
+        ${claimControls}
       </div>
     `;
     registryGrid.appendChild(card);
@@ -194,7 +247,7 @@ async function loadRegistry() {
     renderRegistry([]);
     if (error.status === 401) {
       clearInviteCode();
-      showAccessGate('That invite code wasn’t recognized. Please try again.', true);
+      showAccessGate('We couldn’t find that party. Please search again.', true);
     } else {
       status(registryStatus, 'The live registry is temporarily unavailable. Please try again later.', true);
     }
@@ -203,18 +256,18 @@ async function loadRegistry() {
   }
 }
 
-async function claimGift(itemId) {
+async function updateGiftClaim(itemId, quantity) {
   if (!getInviteCode()) {
     showAccessGate();
     openCodeDialog();
     return;
   }
 
-  status(registryStatus, 'Claiming gift…');
+  status(registryStatus, 'Updating your gift claim…');
   try {
     const response = await apiFetch('/.netlify/functions/registry-claim', {
       method: 'POST',
-      body: JSON.stringify({ itemId })
+      body: JSON.stringify({ itemId, quantity })
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
@@ -222,12 +275,12 @@ async function claimGift(itemId) {
       error.status = response.status;
       throw error;
     }
-    status(registryStatus, 'Gift claimed. Thank you.');
     await loadRegistry();
+    status(registryStatus, quantity ? 'Your gift claim has been updated.' : 'Your gift claim has been removed.');
   } catch (error) {
     if (error.status === 401) {
       clearInviteCode();
-      showAccessGate('That invite code is no longer valid. Please try again.', true);
+      showAccessGate('That party is no longer available. Please search again.', true);
     } else {
       status(registryStatus, error.message, true);
     }
@@ -257,35 +310,83 @@ codeForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (suppressInvitePrompt) return;
 
-  const code = String(new FormData(codeForm).get('inviteCode') || '').trim();
-  if (code.length < 3) {
-    status(codeStatus, 'Enter the code from your invitation.', true);
+  const query = String(new FormData(codeForm).get('partySearch') || '').trim();
+  if (query.length < 2) {
+    status(codeStatus, 'Enter at least two letters of your name.', true);
     return;
   }
 
   const submitButton = codeForm.querySelector('button[type="submit"]');
   submitButton.disabled = true;
-  status(codeStatus, 'Checking your code…');
+  status(codeStatus, 'Searching invitations…');
 
   try {
-    await validateInviteCode(code);
-    setInviteCode(code);
-    codeDialog.close();
-    showPrivateContent();
-    if (privatePage === 'registry') await loadRegistry();
+    await searchParties(query);
+    status(codeStatus, '');
   } catch (error) {
-    status(codeStatus, error.status === 401 ? 'That code wasn’t recognized. Check the invitation and try again.' : 'We couldn’t check that code right now. Please try again shortly.', true);
+    status(codeStatus, 'We couldn’t search invitations right now. Please try again shortly.', true);
   } finally {
     submitButton.disabled = false;
+  }
+});
+
+partyResults?.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-party-token]');
+  if (!button) return;
+  button.disabled = true;
+  status(codeStatus, 'Opening your party…');
+  try {
+    await activateParty(button.dataset.partyToken);
+  } catch (error) {
+    status(codeStatus, 'We couldn’t open that party. Please search again.', true);
+    button.disabled = false;
   }
 });
 
 document.querySelector('[data-refresh-registry]')?.addEventListener('click', loadRegistry);
 
 registryGrid?.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-claim]');
-  if (button) claimGift(button.dataset.claim);
+  const button = event.target.closest('[data-claim-item]');
+  if (button) updateGiftClaim(button.dataset.claimItem, Number(button.dataset.claimQuantity));
 });
+
+function fillRsvpForm(values) {
+  if (!rsvpForm || !values) return;
+  Object.entries(values).forEach(([name, value]) => {
+    const field = rsvpForm.elements.namedItem(name);
+    if (field) field.value = value ?? '';
+  });
+}
+
+async function loadRsvp() {
+  if (!rsvpForm || !getInviteCode()) return;
+  status(rsvpStatus, 'Loading your RSVP…');
+  try {
+    const response = await apiFetch('/.netlify/functions/rsvp');
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(data.error || 'Unable to load RSVP.');
+      error.status = response.status;
+      throw error;
+    }
+    if (data.rsvp) {
+      fillRsvpForm(data.rsvp);
+      if (rsvpSubmit) rsvpSubmit.innerHTML = 'Update our RSVP <span>→</span>';
+      status(rsvpStatus, 'Your saved RSVP is ready to edit.');
+    } else {
+      if (rsvpSubmit) rsvpSubmit.innerHTML = 'Send our RSVP <span>→</span>';
+      status(rsvpStatus, '');
+    }
+    resetLoadedAt();
+  } catch (error) {
+    if (error.status === 401) {
+      clearInviteCode();
+      showAccessGate('We couldn’t find that party. Please search again.', true);
+    } else {
+      status(rsvpStatus, error.message, true);
+    }
+  }
+}
 
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -308,13 +409,13 @@ rsvpForm?.addEventListener('submit', async (event) => {
       error.status = response.status;
       throw error;
     }
-    status(rsvpStatus, 'RSVP received. Thank you.');
-    rsvpForm.reset();
+    status(rsvpStatus, data.updated ? 'RSVP updated. Thank you.' : 'RSVP received. Thank you.');
+    if (rsvpSubmit) rsvpSubmit.innerHTML = 'Update our RSVP <span>→</span>';
     resetLoadedAt();
   } catch (error) {
     if (error.status === 401) {
       clearInviteCode();
-      showAccessGate('That invite code wasn’t recognized. Please try again.', true);
+      showAccessGate('We couldn’t find that party. Please search again.', true);
     } else {
       status(rsvpStatus, error.message, true);
     }
@@ -325,6 +426,7 @@ if (privatePage) {
   if (getInviteCode()) {
     showPrivateContent();
     if (privatePage === 'registry') loadRegistry();
+    if (privatePage === 'rsvp') loadRsvp();
   } else {
     showAccessGate();
   }

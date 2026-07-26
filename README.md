@@ -29,19 +29,17 @@ Expected deployed endpoints:
 
 - `/.netlify/functions/invite`
   - Method: `GET`
-  - Validates the guest code before unlocking RSVP or registry content.
+  - Searches party names with `?q=Jack` and validates the selected party before unlocking RSVP or registry content.
 - `/.netlify/functions/rsvp`
-  - Method: `POST`
-  - Used by the RSVP form.
-  - Writes a record to the RSVP Airtable base.
+  - Methods: `GET`, `POST`
+  - Loads the selected party's saved response and creates or updates its RSVP record.
 - `/.netlify/functions/registry`
   - Method: `GET`
   - Used by the registry section.
   - Reads registry items from the Registry Airtable base.
 - `/.netlify/functions/registry-claim`
   - Method: `POST`
-  - Used when a guest claims a registry item.
-  - Increments the Airtable `Claimed` count in the Registry Airtable base.
+  - Creates, changes, or removes the selected party's claim on a registry item.
 
 These Functions already exist in this repo under `netlify/functions`. On Netlify, you do not manually create the Functions in the UI. You configure the site to use `netlify/functions`, then Netlify deploys them from the repo.
 
@@ -60,7 +58,7 @@ Add these in Netlify under Site configuration -> Environment variables:
 - `AIRTABLE_RSVP_TABLE`
 - `AIRTABLE_REGISTRY_TABLE`
 - `AIRTABLE_INVITES_TABLE`
-  - Optional for early testing. If omitted, any invite code with 3-40 characters is accepted.
+  - Optional for early testing. If omitted, any name search with at least 2 characters is accepted.
 
 ## How to find Airtable base IDs
 
@@ -112,6 +110,8 @@ Create one table named `RSVPs` with these fields:
 - `Notes`
 - `Submitted At`
 
+The site keeps one RSVP row per selected party by matching `Invite Code` to the party name stored by the browser.
+
 ### Registry base
 
 Create one table named `Registry` with these fields:
@@ -123,16 +123,18 @@ Create one table named `Registry` with these fields:
 - `Claimed`
 - `Last Claimed By Code`
 - `Last Claimed At`
+- `Claims By Party`
 
 `Image` can be either an Airtable attachment field or a URL text field. The site supports both.
+`Claims By Party` must be a long-text field. The site stores a small JSON object there so each party can edit or remove its own claimed quantity while `Claimed` remains the overall total.
 
 ### Invites base
 
 Create one table named `Invites` with this field:
 
-- `Invite Code`
+- `Party Names`
 
-Each household/invitation should get one row with the code you send them.
+Each invitation should get one row. Put every person on that invitation into `Party Names`, for example `Jack Smith & Liza Ibiz`. A guest can search any part of that value (such as `Jack` or `Liza`) and select the full party. Existing tables that still have `Invite Code` continue to validate previously saved codes during migration.
 
 ## Local setup
 
@@ -149,4 +151,4 @@ Then open the local URL Netlify prints and test:
 - RSVP submission
 - Registry loading
 - Registry claiming
-- Invalid invite code rejection
+- Party-name search and invalid-party rejection

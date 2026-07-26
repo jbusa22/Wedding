@@ -14,7 +14,7 @@
 <body class="inner-page" data-private-page="rsvp">
   <div class="page-progress" aria-hidden="true"><span></span></div>
   <header class="site-header scrolled">
-    <a class="brand" href="./index.html" aria-label="Jack and Liza — home"><span class="monogram monogram-header" aria-hidden="true"><span class="monogram-j">J</span><span class="monogram-l">L</span><span class="monogram-knot"></span></span></a>
+    <a class="brand" href="./index.html" aria-label="Jack and Liza — home"><span class="logo-mark logo-mark-header" aria-hidden="true"></span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
       <span></span><span></span><span></span><span class="sr-only">Open menu</span>
     </button>
@@ -33,14 +33,14 @@
       <div>
         <p class="eyebrow">Please reply</p>
         <h1>Will we see<br><i>you there?</i></h1>
-        <p>Use the code printed on your invitation to open your RSVP. We’ll remember it on this device.</p>
+        <p>Search for anyone in your invited party to open your RSVP. We’ll remember your party on this device.</p>
       </div>
       <aside class="access-gate" data-access-gate>
         <span class="gate-number">01</span>
         <p class="eyebrow">Guest access</p>
-        <h2>Have your invitation handy?</h2>
-        <p>Your code keeps guest responses connected to the right household.</p>
-        <button class="button button-light" type="button" data-open-code>Enter invite code <span>→</span></button>
+        <h2>Find your party</h2>
+        <p>Enter your first or last name, then choose your party from the matches.</p>
+        <button class="button button-light" type="button" data-open-code>Search your name <span>→</span></button>
         <p class="gate-status" data-gate-status role="status"></p>
       </aside>
     </section>
@@ -50,7 +50,7 @@
         <p class="eyebrow">Your response</p>
         <h2>We can’t wait<br><i>to celebrate.</i></h2>
         <p>Tell us who’s coming, what you’d like to eat, and the song that will get you onto the dance floor.</p>
-        <button class="text-button light-text" type="button" data-change-code>Use a different code <span>↗</span></button>
+        <button class="text-button light-text" type="button" data-change-code>Choose a different party <span>↗</span></button>
       </div>
       <form id="rsvp-form" class="panel-form reveal" autocomplete="on">
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
@@ -81,7 +81,7 @@
           <label>Song request<input name="songRequest" /></label>
           <label>Anything else?<textarea name="notes" rows="2"></textarea></label>
         </div>
-        <button class="button button-dark full" type="submit">Send our RSVP <span>→</span></button>
+        <button class="button button-dark full" type="submit" data-rsvp-submit>Send our RSVP <span>→</span></button>
         <p class="form-status" data-rsvp-status role="status"></p>
       </form>
     </section>
@@ -91,16 +91,17 @@
     <form method="dialog" class="code-box" id="code-form">
       <button class="dialog-close" aria-label="Close" type="button" data-close-code>×</button>
       <p class="eyebrow">Guest access</p>
-      <h2>Your invite code</h2>
-      <p>Enter the code exactly as it appears on your invitation.</p>
-      <label>Invite code<input name="inviteCode" autocomplete="one-time-code" required /></label>
-      <button class="button button-dark full" value="default" type="submit">Continue <span>→</span></button>
+      <h2>Find your party</h2>
+      <p>Type the first or last name of anyone included on your invitation.</p>
+      <label>Your name<input name="partySearch" autocomplete="name" minlength="2" required /></label>
+      <button class="button button-dark full" value="default" type="submit">Search <span>→</span></button>
+      <div class="party-results" data-party-results aria-live="polite"></div>
       <p class="form-status" data-code-status role="status"></p>
     </form>
   </dialog>
 
   <footer class="footer compact-footer">
-    <div class="footer-monogram" aria-label="Jack and Liza"><span class="monogram monogram-footer" aria-hidden="true"><span class="monogram-j">J</span><span class="monogram-l">L</span><span class="monogram-knot"></span></span></div>
+    <div class="footer-monogram" aria-label="Jack and Liza"><span class="logo-mark logo-mark-footer" aria-hidden="true"></span></div>
     <p>With love, from Berkeley</p>
     <a href="./index.html">Wedding home ↑</a>
   </footer>
