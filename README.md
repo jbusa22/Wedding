@@ -110,7 +110,7 @@ Create one table named `RSVPs` with these fields:
 - `Notes`
 - `Submitted At`
 
-The site keeps one RSVP row per selected party by matching `Invite Code` to the party name stored by the browser.
+The site keeps one RSVP row per selected party by matching its stable `Invite Code` value.
 
 ### Registry base
 
@@ -130,11 +130,12 @@ Create one table named `Registry` with these fields:
 
 ### Invites base
 
-Create one table named `Invites` with this field:
+Create one table named `Invites` with these fields:
 
-- `Party Names`
+- `Invite Code`
+- `Household Name`
 
-Each invitation should get one row. Put every person on that invitation into `Party Names`, for example `Jack Smith & Liza Ibiz`. A guest can search any part of that value (such as `Jack` or `Liza`) and select the full party. Existing tables that still have `Invite Code` continue to validate previously saved codes during migration.
+Each invitation should get one row. `Invite Code` is the stable unique key (for example `INV001`). Put the searchable party label in `Household Name`, such as `Jack Smith & Liza Ibiz`. A guest can search any part of the household name (such as `Jack` or `Liza`), while the site privately uses `Invite Code` to load and update that party's data.
 
 ## Local setup
 

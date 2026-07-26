@@ -60,13 +60,13 @@ function escapeFormulaValue(value) {
 }
 
 function invitePartyName(record) {
-  return normalize(record?.fields?.['Party Names'] || record?.fields?.['Invite Code']);
+  return normalize(record?.fields?.['Household Name']);
 }
 
 async function findInvite(inviteCode) {
   if (!inviteCode || inviteCode.length < 2 || inviteCode.length > 120) return null;
   const table = process.env.AIRTABLE_INVITES_TABLE;
-  if (!table) return { id: inviteCode, fields: { 'Party Names': inviteCode } };
+  if (!table) return { id: inviteCode, fields: { 'Invite Code': inviteCode, 'Household Name': inviteCode } };
 
   if (/^rec[a-zA-Z0-9]{10,}$/.test(inviteCode)) {
     try {
@@ -77,19 +77,13 @@ async function findInvite(inviteCode) {
     }
   }
 
-  const formula = encodeURIComponent(`{Party Names} = '${escapeFormulaValue(inviteCode)}'`);
+  const formula = encodeURIComponent(`{Invite Code} = '${escapeFormulaValue(inviteCode)}'`);
   let data;
   try {
     data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=1&filterByFormula=${formula}`);
   } catch (error) {
     if (/Unknown field names/i.test(error.message || '')) {
-      const legacyFormula = encodeURIComponent(`{Invite Code} = '${escapeFormulaValue(inviteCode)}'`);
-      try {
-        data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=1&filterByFormula=${legacyFormula}`);
-      } catch (legacyError) {
-        if (/Unknown field names/i.test(legacyError.message || '')) return null;
-        throw legacyError;
-      }
+      throw new Error('Invite validation is misconfigured. Add an "Invite Code" field to the Invites table.');
     } else {
       throw error;
     }
@@ -112,13 +106,13 @@ async function searchInvites(query) {
   const table = process.env.AIRTABLE_INVITES_TABLE;
   if (!table) return [{ token: cleanQuery, name: cleanQuery }];
 
-  const formula = encodeURIComponent(`SEARCH(LOWER('${escapeFormulaValue(cleanQuery)}'), LOWER({Party Names}))`);
+  const formula = encodeURIComponent(`SEARCH(LOWER('${escapeFormulaValue(cleanQuery)}'), LOWER({Household Name}))`);
   let data;
   try {
     data = await airtableFetch('AIRTABLE_INVITES_BASE_ID', table, `?maxRecords=10&filterByFormula=${formula}`);
   } catch (error) {
     if (/Unknown field names/i.test(error.message || '')) {
-      throw new Error('Invite search is misconfigured. Add a "Party Names" field to the Invites table.');
+      throw new Error('Invite search is misconfigured. Add a "Household Name" field to the Invites table.');
     }
     throw error;
   }
@@ -126,9 +120,10 @@ async function searchInvites(query) {
   return (data.records || [])
     .map((record) => {
       const name = invitePartyName(record);
-      return { token: name, name };
+      const token = normalize(record.fields?.['Invite Code']);
+      return { token, name };
     })
-    .filter((match) => match.name)
+    .filter((match) => match.name && match.token)
     .sort((a, b) => matchScore(a.name, cleanQuery) - matchScore(b.name, cleanQuery) || a.name.localeCompare(b.name));
 }
 
