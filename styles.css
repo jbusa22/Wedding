@@ -130,7 +130,7 @@ i, em { font-weight: inherit; }
 .field-triplet { display: grid; grid-template-columns: 1.3fr .5fr .7fr; gap: 18px; }
 label { display: grid; gap: 8px; color: var(--ink); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
 label small { display: inline; color: var(--muted); font-size: 10px; font-weight: 400; }
-input, textarea, select { width: 100%; min-height: 48px; padding: 12px 2px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid #a8aca4; border-radius: 0; outline: 0; }
+input, textarea, select { width: 100%; min-height: 48px; padding: 12px 2px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid #a8aca4; border-radius: 0; outline: 0; font-size: 16px; }
 input:focus, textarea:focus, select:focus { border-color: var(--forest); box-shadow: 0 1px 0 var(--forest); outline-offset: 1px; }
 textarea { resize: vertical; }
 .hp-field { position: absolute; left: -9999px; opacity: 0; }
