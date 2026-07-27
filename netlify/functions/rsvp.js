@@ -43,7 +43,7 @@ exports.handler = async (event) => {
     if (event.httpMethod === 'GET') return json(200, { rsvp: serializeRsvp(existing) });
 
     if (normalize(payload.website)) return json(400, { error: 'Unable to submit RSVP.' });
-    if (Date.now() - Number(payload.loadedAt || 0) < 3000) return json(400, { error: 'Please try submitting again.' });
+    if (Date.now() - Number(payload.loadedAt || 0) < 3000) return json(400, { error: 'Please wait a few seconds before trying again.' });
 
     const missing = required(payload, ['primaryName', 'email', 'street', 'city', 'state', 'zip', 'attending']);
     if (missing) return json(400, { error: missing });

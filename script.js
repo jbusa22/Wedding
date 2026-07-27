@@ -135,7 +135,6 @@ function showPrivateContent() {
   if (accessGate) accessGate.hidden = true;
   if (privateContent) privateContent.hidden = false;
   status(gateStatus, '');
-  resetLoadedAt();
   requestAnimationFrame(() => {
     privateContent?.querySelectorAll('.reveal').forEach((element) => element.classList.add('visible'));
   });
@@ -431,7 +430,6 @@ async function loadRsvp() {
       showRsvpView('form');
       status(rsvpStatus, '');
     }
-    resetLoadedAt();
   } catch (error) {
     if (error.status === 401) {
       clearInviteCode();
@@ -446,7 +444,6 @@ async function loadRsvp() {
 document.querySelector('[data-edit-rsvp]')?.addEventListener('click', () => {
   showRsvpView('form');
   status(rsvpStatus, 'Make any changes below, then save your RSVP.');
-  resetLoadedAt();
   rsvpForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
