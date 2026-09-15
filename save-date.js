@@ -1,6 +1,5 @@
 const CODE_KEY = 'weddingInviteCode';
 const section = document.querySelector('#mailing-address');
-const trigger = document.querySelector('[data-open-address]');
 const searchForm = document.querySelector('[data-party-search-form]');
 const searchStatus = document.querySelector('[data-search-status]');
 const results = document.querySelector('[data-party-results]');
@@ -34,12 +33,6 @@ function saveCode(code) {
   localStorage.setItem(CODE_KEY, code);
   document.cookie = `${CODE_KEY}=${encodeURIComponent(code)}; Max-Age=2592000; SameSite=Lax; Path=/`;
 }
-
-trigger.addEventListener('click', () => {
-  section.hidden = false;
-  trigger.setAttribute('aria-expanded', 'true');
-  requestAnimationFrame(() => section.scrollIntoView({ behavior: 'smooth' }));
-});
 
 function showAddressForm(match, saved = null) {
   activeParty = match;

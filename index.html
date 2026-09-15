@@ -5,7 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jack &amp; Liza — Save the Date</title>
   <meta name="description" content="Save the date for Jack and Liza's wedding in Berkeley, California." />
-  <meta name="theme-color" content="#314c3c" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jack &amp; Liza — Save the Date" />
+  <meta property="og:description" content="August 21, 2027 · Berkeley, California" />
+  <meta property="og:image" content="/assets/save-the-date-social-redwoods.png" />
+  <meta property="og:image:width" content="792" />
+  <meta property="og:image:height" content="1304" />
+  <meta property="og:image:alt" content="Jack and Liza's save the date among California redwoods: August 21, 2027, in Berkeley, California." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Jack &amp; Liza — Save the Date" />
+  <meta name="twitter:description" content="August 21, 2027 · Berkeley, California" />
+  <meta name="twitter:image" content="/assets/save-the-date-social-redwoods.png" />
+  <meta name="theme-color" content="#213e32" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&amp;family=Italiana&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -22,10 +33,10 @@
         <time class="save-date" datetime="2027-08-21" aria-label="August 21, 2027"><span>August 21, 2027</span></time>
         <p class="save-location">Berkeley, California</p>
       </div>
-      <button class="address-trigger" type="button" data-open-address aria-expanded="false" aria-controls="mailing-address">Share your mailing address <span aria-hidden="true">↓</span></button>
+      <a class="address-trigger" href="#mailing-address">Share your mailing address <span aria-hidden="true">↓</span></a>
     </section>
 
-    <section class="address-section" id="mailing-address" aria-labelledby="address-title" hidden>
+    <section class="address-section" id="mailing-address" aria-labelledby="address-title">
       <div class="address-intro">
         <p class="section-kicker">An invitation among the redwoods</p>
         <h2 id="address-title">A little mail.<br>A lovely beginning.</h2>
@@ -45,15 +56,15 @@
           <p class="form-status" data-search-status role="status"></p>
         </form>
         <div class="party-results" data-party-results aria-live="polite"></div>
-        <form class="mailing-form" data-address-form hidden>
+        <form class="mailing-form" data-address-form autocomplete="on" hidden>
           <div class="selected-household"><p class="selected-party">Mailing address for <strong data-selected-party></strong></p><button class="change-household" type="button" data-change-household>Change household</button></div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" class="honey" aria-hidden="true" />
           <input type="hidden" name="loadedAt" data-loaded-at />
-          <label>Street address<input name="street" autocomplete="street-address" placeholder="Street address, apartment or suite" required /></label>
+          <label for="mailing-street">Street address<input id="mailing-street" name="street" type="text" autocomplete="section-mailing shipping address-line1" autocapitalize="words" placeholder="Street address, apartment or suite" required /></label>
           <div class="field-grid">
-            <label>City<input name="city" autocomplete="address-level2" required /></label>
-            <label>State<input name="state" autocomplete="address-level1" maxlength="2" placeholder="CA" required /></label>
-            <label>ZIP code<input name="zip" autocomplete="postal-code" inputmode="numeric" required /></label>
+            <label for="mailing-city">City<input id="mailing-city" name="city" type="text" autocomplete="section-mailing shipping address-level2" autocapitalize="words" required /></label>
+            <label for="mailing-state">State<input id="mailing-state" name="state" type="text" autocomplete="section-mailing shipping address-level1" autocapitalize="characters" maxlength="2" placeholder="CA" required /></label>
+            <label for="mailing-zip">ZIP code<input id="mailing-zip" name="zip" type="text" autocomplete="section-mailing shipping postal-code" inputmode="numeric" required /></label>
           </div>
           <button class="save-address" type="submit">Save our address <span aria-hidden="true">→</span></button>
           <p class="form-status" data-address-status role="status"></p>
