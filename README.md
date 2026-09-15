@@ -134,8 +134,15 @@ Create one table named `Invites` with these fields:
 
 - `Invite Code`
 - `Household Name`
+- `Street Address`
+- `City`
+- `State`
+- `Zip`
+- `Address Updated At`
 
 Each invitation should get one row. `Invite Code` is the stable unique key (for example `INV001`). Put the searchable party label in `Household Name`, such as `Jack Smith & Liza Ibiz`. A guest can search any part of the household name (such as `Jack` or `Liza`), while the site privately uses `Invite Code` to load and update that party's data.
+
+The public save-the-date page uses the address fields to collect each household's mailing address before RSVP opens. Keeping this data on the invitation record means the same stable invite code can be used for later guest access.
 
 ## Local setup
 
@@ -153,3 +160,7 @@ Then open the local URL Netlify prints and test:
 - Registry loading
 - Registry claiming
 - Party-name search and invalid-party rejection
+
+## Save-the-date launch plan
+
+See [NETLIFY-ADDRESS-PLAN.md](./NETLIFY-ADDRESS-PLAN.md) for address collection setup, launch blockers, and verification steps.

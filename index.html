@@ -3,141 +3,74 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jack &amp; Liza — Berkeley, California</title>
-  <meta name="description" content="Join Jack and Liza for a garden celebration in Berkeley, California." />
-  <meta name="theme-color" content="#153d31" />
+  <title>Jack &amp; Liza — Save the Date</title>
+  <meta name="description" content="Save the date for Jack and Liza's wedding in Berkeley, California." />
+  <meta name="theme-color" content="#314c3c" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&amp;family=Italiana&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&amp;family=Italiana&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./save-date.css" />
 </head>
 <body>
-  <div class="page-progress" aria-hidden="true"><span></span></div>
-  <header class="site-header">
-    <a class="brand" href="#home" aria-label="Jack and Liza — home">
-      <span class="logo-mark logo-mark-header" aria-hidden="true"></span>
-    </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-      <span></span><span></span><span></span><span class="sr-only">Open menu</span>
-    </button>
-    <nav class="nav" id="primary-nav" aria-label="Primary navigation">
-      <a href="#schedule">The weekend</a>
-      <a href="#travel">Berkeley</a>
-      <a href="./rsvp.html">RSVP</a>
-      <a href="./registry.html">Registry</a>
-      <a href="#faq">Details</a>
-    </nav>
-    <a class="text-button guest-code" href="./rsvp.html">RSVP <span>↗</span></a>
-  </header>
-
   <main>
-    <section id="home" class="hero">
-      <div class="hero-image" role="img" aria-label="Sunlight filtering through a grove of tall redwood trees"></div>
-      <div class="hero-wash" aria-hidden="true"></div>
-      <div class="hero-topline">
-        <span>Berkeley, California</span>
-        <span>Our wedding celebration</span>
+    <section class="save-hero" aria-labelledby="save-title">
+      <img class="save-hero__art" src="./assets/redwood-canopy-watercolor.png" alt="A watercolor view looking upward through a grove of towering California redwoods" />
+      <div class="save-hero__wash" aria-hidden="true"></div>
+      <div class="save-hero__content">
+        <p class="save-kicker">Save the date</p>
+        <h1 id="save-title"><span>Jack</span><i class="name-ampersand">&amp;</i><span>Liza</span></h1>
+        <time class="save-date" datetime="2027-08-21" aria-label="August 21, 2027"><span>August 21, 2027</span></time>
+        <p class="save-location">Berkeley, California</p>
       </div>
-      <div class="hero-content">
-        <p class="eyebrow">Together with their families, invite you to their wedding</p>
-        <h1><span>Jack</span><em>&amp;</em><span>Liza</span></h1>
-        <p class="hero-copy">Join us as we exchange vows among the redwoods, with the whole Bay stretching out below us.</p>
-        <div class="hero-actions">
-          <a class="button button-light" href="./rsvp.html">Reply to the invitation</a>
-          <a class="quiet-link" href="#schedule">Explore the weekend <span>↓</span></a>
+      <button class="address-trigger" type="button" data-open-address aria-expanded="false" aria-controls="mailing-address">Share your mailing address <span aria-hidden="true">↓</span></button>
+    </section>
+
+    <section class="address-section" id="mailing-address" aria-labelledby="address-title" hidden>
+      <div class="address-intro">
+        <p class="section-kicker">An invitation among the redwoods</p>
+        <h2 id="address-title">A little mail.<br>A lovely beginning.</h2>
+        <p>We can’t wait to celebrate with you beneath the trees. Share your mailing address so your invitation can find its way home.</p>
+      </div>
+      <div class="address-panel">
+        <div class="postcard-heading"><span class="postcard-names">Jack <i class="name-ampersand">&amp;</i> Liza</span><span class="postcard-stamp" aria-hidden="true">J <i class="name-ampersand">&amp;</i> L</span></div>
+        <p class="section-kicker">The invitation list</p>
+        <h3 class="form-title">Where should we send yours?</h3>
+        <p class="form-note">Find your household to share your mailing address.</p>
+        <form class="party-search" data-party-search-form>
+          <label for="party-search">First or last name</label>
+          <div class="search-row">
+            <input id="party-search" name="partySearch" type="search" autocomplete="name" placeholder="Start typing your name" minlength="2" required />
+            <button type="submit">Find us</button>
+          </div>
+          <p class="form-status" data-search-status role="status"></p>
+        </form>
+        <div class="party-results" data-party-results aria-live="polite"></div>
+        <form class="mailing-form" data-address-form hidden>
+          <div class="selected-household"><p class="selected-party">Mailing address for <strong data-selected-party></strong></p><button class="change-household" type="button" data-change-household>Change household</button></div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" class="honey" aria-hidden="true" />
+          <input type="hidden" name="loadedAt" data-loaded-at />
+          <label>Street address<input name="street" autocomplete="street-address" placeholder="Street address, apartment or suite" required /></label>
+          <div class="field-grid">
+            <label>City<input name="city" autocomplete="address-level2" required /></label>
+            <label>State<input name="state" autocomplete="address-level1" maxlength="2" placeholder="CA" required /></label>
+            <label>ZIP code<input name="zip" autocomplete="postal-code" inputmode="numeric" required /></label>
+          </div>
+          <button class="save-address" type="submit">Save our address <span aria-hidden="true">→</span></button>
+          <p class="form-status" data-address-status role="status"></p>
+        </form>
+        <div class="address-thanks" data-address-thanks tabindex="-1" hidden>
+          <p class="section-kicker">Your address is saved</p>
+          <h3>Now save the date.</h3>
+          <p class="address-thanks__date"><time datetime="2027-08-21">August 21, 2027</time><span aria-hidden="true">·</span> Berkeley, California</p>
+          <p>Thank you—we’ll know where to send your invitation. We can’t wait to celebrate with you.</p>
+          <div class="address-thanks__actions">
+            <a class="calendar-link" href="./assets/jack-liza-save-the-date.ics" download>Add to calendar <span aria-hidden="true">↓</span></a>
+            <button type="button" data-edit-address>Edit address</button>
+          </div>
         </div>
-      </div>
-      <div class="hero-mark" aria-hidden="true">JL</div>
-    </section>
-
-    <section class="invitation-note reveal">
-      <div class="invitation-portrait" role="img" aria-label="A newly married couple walking together outdoors"></div>
-      <div class="invitation-copy">
-        <p class="eyebrow">We’re getting married</p>
-        <p class="statement">We found each other.<br>Now we’d love to celebrate <i>with you.</i></p>
-        <p class="invitation-body">Please join us for a wedding weekend shaped by the things we love most: old trees, good food, big views, and all of our favorite people in one place.</p>
-        <span class="flourish" aria-hidden="true">J <i>&amp;</i> L</span>
-      </div>
-    </section>
-
-    <section id="schedule" class="section schedule-section">
-      <div class="section-intro reveal">
-        <p class="eyebrow">The weekend</p>
-        <h2>Three days,<br><i>one good reason.</i></h2>
-        <p>From the first welcome toast to the last dance, we’d be happiest simply having you there.</p>
-      </div>
-      <div class="timeline">
-        <article class="timeline-item reveal">
-          <div class="day-number">01</div>
-          <div class="timeline-copy">
-            <p class="eyebrow">Friday · 7:00 PM</p>
-            <h3>Welcome drinks</h3>
-            <p>Meet us at the hotel bar for a relaxed first toast. Come as you are.</p>
-          </div>
-          <span class="timeline-arrow" aria-hidden="true">↘</span>
-        </article>
-        <article class="timeline-item reveal">
-          <div class="day-number">02</div>
-          <div class="timeline-copy">
-            <p class="eyebrow">Saturday · 4:30 PM</p>
-            <h3>The wedding</h3>
-            <p>A garden ceremony, followed by cocktails, dinner, dancing, and a night under the trees.</p>
-          </div>
-          <span class="timeline-arrow" aria-hidden="true">↘</span>
-        </article>
-        <article class="timeline-item reveal">
-          <div class="day-number">03</div>
-          <div class="timeline-copy">
-            <p class="eyebrow">Sunday · 10:00 AM</p>
-            <h3>Farewell brunch</h3>
-            <p>One last coffee and a proper goodbye for anyone still in town.</p>
-          </div>
-          <span class="timeline-arrow" aria-hidden="true">↘</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="travel" class="travel-section">
-      <div class="bay-image" role="img" aria-label="The Golden Gate Bridge and San Francisco Bay"></div>
-      <div class="travel-panel reveal">
-        <p class="eyebrow">Meet us in Berkeley</p>
-        <h2>Garden above.<br><i>Bay below.</i></h2>
-        <p class="travel-lede">Our wedding takes place in the Berkeley hills, surrounded by redwoods and overlooking San Francisco Bay.</p>
-        <div class="travel-details">
-          <article>
-            <span>01</span>
-            <div><h3>The garden</h3><p>Venue name<br>Street address<br>Berkeley, CA</p></div>
-          </article>
-          <article>
-            <span>02</span>
-            <div><h3>Stay nearby</h3><p>Hotel block and booking details will be shared here soon.</p></div>
-          </article>
-          <article>
-            <span>03</span>
-            <div><h3>Getting around</h3><p>Airport, rideshare, and parking notes will be added before the weekend.</p></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="faq" class="section faq-section">
-      <div class="faq-heading reveal">
-        <p class="eyebrow">Good to know</p>
-        <h2>A few<br><i>details.</i></h2>
-      </div>
-      <div class="faq-list reveal">
-        <details open><summary><span>01</span>What should I wear?<i>+</i></summary><p>Cocktail attire. The celebration is outdoors, so layers and garden-friendly shoes are a good idea.</p></details>
-        <details><summary><span>02</span>Can I bring a guest?<i>+</i></summary><p>Please check your invitation or RSVP code details.</p></details>
-        <details><summary><span>03</span>Are kids invited?<i>+</i></summary><p>Please check the names listed with your invitation.</p></details>
       </div>
     </section>
   </main>
-
-  <footer class="footer">
-    <div class="footer-monogram" aria-label="Jack and Liza"><span class="logo-mark logo-mark-footer" aria-hidden="true"></span></div>
-    <p>With love, from Berkeley</p>
-    <a href="#home">Back to top ↑</a>
-  </footer>
-  <script src="./script.js" type="module"></script>
+  <script src="./save-date.js" defer></script>
 </body>
 </html>
