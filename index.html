@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <script>document.documentElement.classList.add('js');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jack &amp; Liza — Save the Date</title>
   <meta name="description" content="Save the date for Jack and Liza's wedding in Berkeley, California." />
@@ -25,7 +26,14 @@
 <body>
   <main>
     <section class="save-hero" aria-labelledby="save-title">
-      <img class="save-hero__art" src="./assets/redwood-canopy-watercolor.png" alt="A watercolor view looking upward through a grove of towering California redwoods" />
+      <div class="hero-reveal" aria-hidden="true">
+        <div class="hero-reveal__mark">
+          <span>Save the date</span>
+          <strong>J <i>&amp;</i> L</strong>
+          <b></b>
+        </div>
+      </div>
+      <img class="save-hero__art" src="./assets/redwood-canopy-watercolor.png" alt="A watercolor view looking upward through a grove of towering California redwoods" fetchpriority="high" decoding="async" />
       <div class="save-hero__wash" aria-hidden="true"></div>
       <div class="save-hero__content">
         <p class="save-kicker">Save the date</p>

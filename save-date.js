@@ -1,4 +1,5 @@
 const CODE_KEY = 'weddingInviteCode';
+const heroImage = document.querySelector('.save-hero__art');
 const section = document.querySelector('#mailing-address');
 const searchForm = document.querySelector('[data-party-search-form]');
 const searchStatus = document.querySelector('[data-search-status]');
@@ -9,6 +10,25 @@ const selectedParty = document.querySelector('[data-selected-party]');
 const thanks = document.querySelector('[data-address-thanks]');
 const loadedAt = document.querySelector('[data-loaded-at]');
 let activeParty = null;
+
+function revealHero() {
+  if (document.documentElement.classList.contains('hero-ready')) return;
+  document.documentElement.classList.add('hero-ready');
+}
+
+if (heroImage) {
+  const minimumRevealTime = new Promise((resolve) => window.setTimeout(resolve, 700));
+  const imageReady = heroImage.complete
+    ? (heroImage.decode?.() || Promise.resolve()).catch(() => {})
+    : new Promise((resolve) => {
+        heroImage.addEventListener('load', resolve, { once: true });
+        heroImage.addEventListener('error', resolve, { once: true });
+      });
+  Promise.all([minimumRevealTime, imageReady]).then(revealHero);
+  window.setTimeout(revealHero, 5000);
+} else {
+  revealHero();
+}
 
 function setStatus(node, message = '', error = false) {
   node.textContent = message;
