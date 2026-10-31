@@ -4,6 +4,15 @@ const addressForm = document.querySelector('[data-address-form]');
 const addressStatus = document.querySelector('[data-address-status]');
 const thanks = document.querySelector('[data-address-thanks]');
 const loadedAt = document.querySelector('[data-loaded-at]');
+const confirmationImage = new Image();
+const confirmationImageReady = new Promise((resolve) => {
+  confirmationImage.onload = () => {
+    if (confirmationImage.decode) confirmationImage.decode().catch(() => {}).then(resolve);
+    else resolve();
+  };
+  confirmationImage.onerror = resolve;
+});
+confirmationImage.src = './assets/jack-liza-field.jpg';
 
 function revealHero() {
   if (document.documentElement.classList.contains('hero-ready')) return;
@@ -59,6 +68,8 @@ addressForm.addEventListener('submit', async (event) => {
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || 'Unable to save your address.');
+    button.textContent = 'Preparing…';
+    await confirmationImageReady;
     addressForm.hidden = true;
     thanks.hidden = false;
     section.classList.add('is-complete');

@@ -62,9 +62,6 @@ button:focus-visible,input:focus-visible { outline:2px solid #91a58a; outline-of
 .address-thanks h3 { font-size:44px; }
 .address-thanks>p:not(.section-kicker) { color:#59695c; }
 .address-thanks__date { display:flex; flex-wrap:wrap; gap:7px; font-family:"Cormorant Garamond",Georgia,serif; font-size:21px !important; font-weight:500; }
-.address-thanks__actions { margin-top:30px; display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
-.calendar-link { min-height:50px; padding:0 20px; display:inline-flex; align-items:center; gap:22px; color:var(--cream); background:var(--forest); border:1px solid var(--forest); font-size:12px; font-weight:600; text-decoration:none; }
-.calendar-link:hover { background:#3e5c44; }
 form { display:grid; gap:22px; }
 label { display:grid; gap:5px; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
 input { width:100%; min-width:0; min-height:42px; padding:8px 2px; color:var(--ink); background:transparent; border:0; border-bottom:1px solid #8f968d; border-radius:0; outline:0; font-size:16px; letter-spacing:0; text-transform:none; }
@@ -82,21 +79,16 @@ button { transition:background-color .2s,color .2s; }
 .form-status.error { color:#963c31; }
 .honey { position:absolute; left:-9999px; opacity:0; }
 .is-loading { opacity:.62; cursor:wait; }
-.address-section.is-complete { min-height:100svh; grid-template-columns:1fr; place-items:center; background:linear-gradient(180deg,rgba(12,25,20,.18),rgba(10,24,18,.58)),url("./assets/jack-liza-field.jpg") center 48% / cover no-repeat; }
+.address-section.is-complete { min-height:100svh; grid-template-columns:1fr; align-content:end; justify-items:end; background:linear-gradient(180deg,rgba(12,25,20,.08),rgba(10,24,18,.3)),url("./assets/jack-liza-field.jpg") center 15% / cover no-repeat; }
 .address-section.is-complete::before { display:none; }
 .address-section.is-complete::after { border-color:rgba(255,255,255,.28); }
 .address-section.is-complete .address-intro { display:none; }
-.address-section.is-complete .address-panel { max-width:600px; padding:clamp(34px,5vw,58px); color:#fffdf7; background:rgba(18,38,29,.72); border-color:rgba(255,255,255,.36); box-shadow:0 24px 80px rgba(4,14,9,.42); backdrop-filter:blur(8px); }
-.address-section.is-complete .address-panel::before { border-color:rgba(255,255,255,.2); }
-.address-section.is-complete .postcard-heading { color:#fffdf7; }
-.address-section.is-complete .postcard-stamp { border-color:rgba(255,253,247,.54); outline-color:rgba(255,253,247,.24); }
-.address-section.is-complete .address-thanks { margin-top:46px; text-align:center; }
-.address-section.is-complete .address-thanks h3 { font-size:clamp(48px,7vw,78px); }
-.address-section.is-complete .address-thanks>p:not(.section-kicker) { max-width:440px; margin-left:auto; margin-right:auto; color:rgba(255,253,247,.84); }
-.address-section.is-complete .address-thanks__date { justify-content:center; color:#fffdf7 !important; }
-.address-section.is-complete .address-thanks__actions { justify-content:center; }
-.address-section.is-complete .calendar-link { color:var(--forest); background:#fffaf0; border-color:#fffaf0; }
-.address-section.is-complete .calendar-link:hover { background:#e9dfcd; }
+.address-section.is-complete .address-panel { max-width:390px; padding:30px 34px 32px; color:#344338; background:rgba(247,242,228,.88); border:1px solid rgba(255,255,255,.55); box-shadow:0 12px 40px rgba(33,35,24,.12); backdrop-filter:blur(10px); }
+.address-section.is-complete .address-thanks { margin-top:0; text-align:left; }
+.address-section.is-complete .address-thanks h3 { margin:14px 0 0; font-size:clamp(34px,3vw,44px); line-height:1.12; }
+.address-section.is-complete .address-thanks .confirmation-kicker { margin:0; color:#7b785f; font:600 10px var(--sans); letter-spacing:.18em; line-height:1.4; text-transform:uppercase; }
+.address-section.is-complete .address-thanks>p:not(.section-kicker) { max-width:none; margin:14px 0 0; color:#465246; }
+.address-section.is-complete .address-thanks__date { justify-content:flex-start; gap:8px; padding-top:18px; border-top:1px solid rgba(52,67,56,.25); color:#465246 !important; font:500 11px var(--sans) !important; letter-spacing:.04em; }
 @keyframes settle { from { scale:1.08; opacity:.55; } to { scale:1.01; opacity:1; } }
 @keyframes reveal-line { 0% { transform:scaleX(0); } 55% { transform:scaleX(1); transform-origin:left; } 56% { transform-origin:right; } 100% { transform:scaleX(0); transform-origin:right; } }
 @media (min-width:780px) { .save-hero__content { padding-bottom:80px; } .address-section { padding:72px 8vw; grid-template-columns:1fr 1fr; gap:5vw; } .address-panel { align-self:center; } }
@@ -122,12 +114,9 @@ button { transition:background-color .2s,color .2s; }
   .form-title { font-size:clamp(27px,7.5vw,32px); }
   .save-address { width:100%; padding:0 2px; }
   .save-address span { margin-left:12px; }
-  .address-section.is-complete { background-position:52% center; }
-  .address-section.is-complete .address-panel { padding:34px 24px; }
-  .address-section.is-complete .postcard-heading { margin-bottom:12px; }
-  .address-section.is-complete .address-thanks { margin-top:30px; }
-  .address-thanks__actions { flex-direction:column; gap:20px; }
-  .calendar-link { width:100%; justify-content:center; }
+  .address-section.is-complete { background-position:52% 15%; }
+  .address-section.is-complete .address-panel { padding:24px; }
+  .address-section.is-complete .address-thanks { margin-top:0; }
 }
 
 @container (max-width:360px) {
