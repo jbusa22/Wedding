@@ -21,14 +21,18 @@ function revealHero() {
 
 if (heroImage) {
   const minimumRevealTime = new Promise((resolve) => window.setTimeout(resolve, 700));
-  const imageReady = heroImage.complete
-    ? (heroImage.decode?.() || Promise.resolve()).catch(() => {})
+  const imageLoaded = heroImage.complete
+    ? Promise.resolve()
     : new Promise((resolve) => {
         heroImage.addEventListener('load', resolve, { once: true });
         heroImage.addEventListener('error', resolve, { once: true });
       });
-  Promise.all([minimumRevealTime, imageReady]).then(revealHero);
-  window.setTimeout(revealHero, 5000);
+  const imageReady = imageLoaded.then(() => {
+    if (heroImage.naturalWidth && heroImage.decode) return heroImage.decode().catch(() => {});
+  });
+  // Keep the page usable if a connection stalls indefinitely.
+  const fallback = new Promise((resolve) => window.setTimeout(resolve, 20000));
+  Promise.all([minimumRevealTime, Promise.race([imageReady, fallback])]).then(revealHero);
 } else {
   revealHero();
 }
