@@ -1,3 +1,5 @@
+> Historical plan: the household lookup described below has been replaced by direct, write-only address submissions. See the README for the current setup.
+
 # Save-the-date address collection: Netlify launch plan
 
 Status: plan only; nothing deployed or connected in this task.

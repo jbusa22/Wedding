@@ -140,9 +140,9 @@ Create one table named `Invites` with these fields:
 - `Zip`
 - `Address Updated At`
 
-Each invitation should get one row. `Invite Code` is the stable unique key (for example `INV001`). Put the searchable party label in `Household Name`, such as `Jack Smith & Liza Ibiz`. A guest can search any part of the household name (such as `Jack` or `Liza`), while the site privately uses `Invite Code` to load and update that party's data.
+The public save-the-date form creates a new row for each address submission. Guests enter their name or household name directly; no invitation lookup is required. `Zip` should be a text field so leading zeros are preserved. Repeated submissions create separate rows, which can be reviewed and reconciled in Airtable.
 
-The public save-the-date page uses the address fields to collect each household's mailing address before RSVP opens. Keeping this data on the invitation record means the same stable invite code can be used for later guest access.
+The RSVP and registry pages still use `Invite Code` to control guest access. Address submissions do not create an invite code; add one to a record if it will be used for those pages.
 
 ## Local setup
 

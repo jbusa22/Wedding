@@ -46,45 +46,28 @@
 
     <section class="address-section" id="mailing-address" aria-labelledby="address-title">
       <div class="address-intro">
-        <p class="section-kicker">An invitation among the redwoods</p>
-        <h2 id="address-title">A little mail.<br>A lovely beginning.</h2>
-        <p>We can’t wait to celebrate with you beneath the trees. Share your mailing address so your invitation can find its way home.</p>
+        <h2 id="address-title">Invitations<br>to follow.</h2>
+        <p>Where can we send yours?</p>
       </div>
       <div class="address-panel">
-        <div class="postcard-heading"><span class="postcard-names">Jack <i class="name-ampersand">&amp;</i> Liza</span><span class="postcard-stamp" aria-hidden="true">J <i class="name-ampersand">&amp;</i> L</span></div>
-        <p class="section-kicker">The invitation list</p>
-        <h3 class="form-title">Where should we send yours?</h3>
-        <p class="form-note">Find your household to share your mailing address.</p>
-        <form class="party-search" data-party-search-form>
-          <label for="party-search">First or last name</label>
-          <div class="search-row">
-            <input id="party-search" name="partySearch" type="search" autocomplete="name" placeholder="Start typing your name" minlength="2" required />
-            <button type="submit">Find us</button>
-          </div>
-          <p class="form-status" data-search-status role="status"></p>
-        </form>
-        <div class="party-results" data-party-results aria-live="polite"></div>
-        <form class="mailing-form" data-address-form autocomplete="on" hidden>
-          <div class="selected-household"><p class="selected-party">Mailing address for <strong data-selected-party></strong></p><button class="change-household" type="button" data-change-household>Change household</button></div>
+        <form class="mailing-form" data-address-form autocomplete="on">
+          <label for="mailing-name">Your name or names<input id="mailing-name" name="name" type="text" autocomplete="name" autocapitalize="words" placeholder="Alex and Sam Smith" required /></label>
           <input type="text" name="website" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" class="honey" aria-hidden="true" />
           <input type="hidden" name="loadedAt" data-loaded-at />
-          <label for="mailing-street">Street address<input id="mailing-street" name="street" type="text" autocomplete="section-mailing shipping address-line1" autocapitalize="words" placeholder="Street address, apartment or suite" required /></label>
+          <label for="mailing-street">Street address<input id="mailing-street" name="street" type="text" autocomplete="section-mailing shipping address-line1" autocapitalize="words" placeholder="123 Main St, Apt 4" required /></label>
           <div class="field-grid">
-            <label for="mailing-city">City<input id="mailing-city" name="city" type="text" autocomplete="section-mailing shipping address-level2" autocapitalize="words" required /></label>
+            <label for="mailing-city">City<input id="mailing-city" name="city" type="text" autocomplete="section-mailing shipping address-level2" autocapitalize="words" placeholder="Berkeley" required /></label>
             <label for="mailing-state">State<input id="mailing-state" name="state" type="text" autocomplete="section-mailing shipping address-level1" autocapitalize="characters" maxlength="2" placeholder="CA" required /></label>
-            <label for="mailing-zip">ZIP code<input id="mailing-zip" name="zip" type="text" autocomplete="section-mailing shipping postal-code" inputmode="numeric" required /></label>
+            <label for="mailing-zip">ZIP code<input id="mailing-zip" name="zip" type="text" autocomplete="section-mailing shipping postal-code" inputmode="numeric" placeholder="94704" required /></label>
           </div>
-          <button class="save-address" type="submit">Save our address <span aria-hidden="true">→</span></button>
+          <button class="save-address" type="submit">Send address <span aria-hidden="true">→</span></button>
           <p class="form-status" data-address-status role="status"></p>
         </form>
         <div class="address-thanks" data-address-thanks tabindex="-1" hidden>
-          <p class="section-kicker">Your address is saved</p>
-          <h3>Now save the date.</h3>
+          <h3>Thank you!</h3>
           <p class="address-thanks__date"><time datetime="2027-08-21">August 21, 2027</time><span aria-hidden="true">·</span> Berkeley, California</p>
-          <p>Thank you—we’ll know where to send your invitation. We can’t wait to celebrate with you.</p>
           <div class="address-thanks__actions">
             <a class="calendar-link" href="./assets/jack-liza-save-the-date.ics" download>Add to calendar <span aria-hidden="true">↓</span></a>
-            <button type="button" data-edit-address>Edit address</button>
           </div>
         </div>
       </div>
