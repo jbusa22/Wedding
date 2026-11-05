@@ -1,16 +1,17 @@
 :root { --cream:#f5f0e5; --paper:#eee7d9; --forest:#263f34; --rust:#8b5f43; --ink:#23372f; --line:rgba(35,55,47,.22); --serif:"Italiana",Georgia,serif; --sans:"Manrope",system-ui,sans-serif; }
 * { box-sizing:border-box; }
 [hidden] { display:none !important; }
-html { scroll-behavior:smooth; }
-body { margin:0; color:var(--ink); background:var(--paper); font-family:var(--sans); }
+/* Paint Safari's exposed safe areas to match the invitations section. */
+html { scroll-behavior:smooth; background:#213e32; }
+body { margin:0; color:var(--ink); background:#213e32; font-family:var(--sans); }
 button,input { font:inherit; }
 button { cursor:pointer; }
 button,input { -webkit-tap-highlight-color:transparent; }
 button:focus-visible,input:focus-visible { outline:2px solid #91a58a; outline-offset:4px; }
-.save-hero { position:relative; min-height:100svh; overflow:hidden; display:grid; place-items:center; isolation:isolate; color:#fffdf7; background:#213e32; }
+.save-hero { position:relative; min-height:100svh; padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px); overflow:hidden; display:grid; place-items:center; isolation:isolate; color:#fffdf7; background:#213e32; }
 .save-hero__art { position:absolute; inset:0; z-index:-3; width:100%; height:100%; object-fit:cover; object-position:center; animation:settle 1.8s cubic-bezier(.2,.7,.2,1) both; }
 .hero-reveal { display:none; }
-.js .hero-reveal { position:absolute; inset:0; z-index:10; display:grid; place-items:center; pointer-events:none; visibility:visible; transition:visibility 0s linear 1.45s; }
+.js .hero-reveal { position:fixed; inset:0; z-index:10; display:grid; place-items:center; pointer-events:none; visibility:visible; transition:visibility 0s linear 1.45s; }
 .js .hero-reveal::before,.js .hero-reveal::after { content:""; position:absolute; inset-block:0; width:51%; background:#213e32; transition:transform 1.25s cubic-bezier(.76,0,.24,1); }
 .js .hero-reveal::before { left:0; }
 .js .hero-reveal::after { right:0; }
@@ -38,7 +39,7 @@ button:focus-visible,input:focus-visible { outline:2px solid #91a58a; outline-of
 .save-date span { font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(25px,6vw,36px); font-weight:500; line-height:1; }
 .save-date b { font-family:"Cormorant Garamond",Georgia,serif; font-size:clamp(25px,6vw,36px); font-weight:500; line-height:.95; }
 .save-location { margin:20px 0 0; color:inherit; font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; }
-.address-trigger { position:absolute; left:50%; bottom:max(24px,env(safe-area-inset-bottom)); translate:-50% 0; width:max-content; padding:12px 2px 8px; color:#fffdf7; background:transparent; border:0; border-bottom:1px solid rgba(255,253,247,.58); font-size:11px; font-weight:600; letter-spacing:.08em; text-decoration:none; }
+.address-trigger { position:absolute; left:50%; bottom:calc(24px + env(safe-area-inset-bottom,0px)); translate:-50% 0; width:max-content; padding:12px 2px 8px; color:#fffdf7; background:transparent; border:0; border-bottom:1px solid rgba(255,253,247,.58); font-size:11px; font-weight:600; letter-spacing:.08em; text-decoration:none; }
 .address-trigger span { margin-left:9px; }
 .address-section { position:relative; isolation:isolate; min-height:100svh; padding:64px 24px; display:grid; align-content:center; gap:30px; background:#213e32; color:var(--cream); overflow:hidden; }
 .address-section::before { content:""; position:absolute; inset:0; z-index:-1; background:url("./assets/redwood-linework.svg") center bottom / cover no-repeat; opacity:.23; pointer-events:none; }
@@ -120,4 +121,18 @@ button { transition:background-color .2s,color .2s; }
 }
 
 @container (max-width:360px) {
+}
+
+/* Keep the form clear of the home indicator and landscape display cutouts. */
+.address-section {
+  padding-bottom:calc(48px + env(safe-area-inset-bottom,0px));
+  padding-left:max(clamp(20px,6vw,40px),env(safe-area-inset-left,0px));
+  padding-right:max(clamp(20px,6vw,40px),env(safe-area-inset-right,0px));
+}
+@media (min-width:780px) {
+  .address-section {
+    padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));
+    padding-left:max(8vw,env(safe-area-inset-left,0px));
+    padding-right:max(8vw,env(safe-area-inset-right,0px));
+  }
 }
